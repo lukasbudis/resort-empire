@@ -1,5 +1,5 @@
 # resort-empire
-Resort Empire: Paradise Tycoon – tímový projekt (Softvérové inžinierstvo, UKF), Unity 2D, Android 8.0 a novší, referenčné zariadanie je: Xiami POCO X5 Pro 5G
+Resort Empire: Paradise Tycoon – tímový projekt (Softvérové inžinierstvo, UKF), Unity 2D, Android 8.0 a novší, 64-bitové zariadenia, referenčné zariadanie je: Xiami POCO X5 Pro 5G
 
 Pravidlá práce s Gitom (GitFlow): [CONTRIBUTING.md](CONTRIBUTING.md)
 
