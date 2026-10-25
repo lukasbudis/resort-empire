@@ -1,0 +1,10 @@
+{
+    "workerConfig": {
+        "maxWorkers": 10
+    },
+    "resourceConfig": {
+        "coins": 500,
+        "maxEnergy": 50,
+        "currentEnergy": 32
+    }
+}
