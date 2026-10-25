@@ -780,6 +780,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameHUD
       objectReference: {fileID: 0}
+    - target: {fileID: 4009907362380970392, guid: 9f7ac778afb2fa04da65f1e910392ac4, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7189919984377705464, guid: 9f7ac778afb2fa04da65f1e910392ac4, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8701045643858184196, guid: 9f7ac778afb2fa04da65f1e910392ac4, type: 3}
       propertyPath: m_Pivot.x
       value: 0

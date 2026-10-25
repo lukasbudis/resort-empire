@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6467618437152285138}
   - component: {fileID: 6600016487477132248}
   - component: {fileID: 3610377899931770930}
+  - component: {fileID: 8296984835626902703}
   m_Layer: 5
   m_Name: GameHUD
   m_TagString: Untagged
@@ -104,6 +105,20 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8296984835626902703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593674311673078264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d553fec917ce83a4f84cdd74c1aae121, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudController
+  coinsText: {fileID: 8950427466302637340}
+  energyText: {fileID: 8894416090602128662}
 --- !u!1 &2515602576633122249
 GameObject:
   m_ObjectHideFlags: 0
