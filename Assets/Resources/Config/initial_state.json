@@ -1,6 +1,6 @@
 {
   "coins": 0,
-  "energy": 39,
+  "energy": 50,
   "resortValue": 0,
   "buildings": [
     { "id": "Reception", "level": 1 },
