@@ -57,6 +57,56 @@ public static class UtilConfig
         return data.workerConfig.maxWorkers;
     }
 
+    public static BuildingInitialState[] getBuildings()
+    {
+        if (data == null) {
+            return null;
+        }
+        return data.buildings;
+    }
+
+    public static BuildingInitialState getBuildingByIndex(int i)
+    {
+        if (data == null || i > data.buildings.Length)
+        {
+            return null;
+        }
+        return data.buildings[i];
+    }
+
+    public static int getBuildingCount()
+    {
+        if (data == null) {
+            return -1;
+        }
+        return data.buildings.Length;
+    }
+
+    public static WorkerInitialState[] getWorkers()
+    {
+        if (data == null) {
+            return null;
+        }
+        return data.workers;
+    }
+
+    public static WorkerInitialState getWorkersByIndex(int i)
+    {
+        if (data == null || i > data.workers.Length)
+        {
+            return null;
+        }
+        return data.workers[i];
+    }
+
+    public static int getWorkersCount()
+    {
+        if (data == null) {
+            return -1;
+        }
+        return data.workers.Length;
+    }
+
     public static MainConfig getConfig()
     {
     return data;

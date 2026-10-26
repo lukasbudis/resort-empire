@@ -10,10 +10,16 @@ public class ConfigurationTests
 
         int coins = UtilConfig.getCoins();
         int energy = UtilConfig.getCurrentEnergy();
-        int maxWorkers =  UtilConfig.getMaxWorkers();
+        int workersCount =  UtilConfig.getWorkersCount();
+        var workers = UtilConfig.getWorkers();
+        int buildingsCount =  UtilConfig.getBuildingCount();
+        var buildings = UtilConfig.getBuildings();
 
         Assert.AreNotEqual(-1, coins);
         Assert.AreNotEqual(-1, energy);
-        Assert.AreNotEqual(-1, maxWorkers);
+        Assert.AreNotEqual(-1, workersCount);
+        Assert.AreNotEqual(null, workers);
+        Assert.AreNotEqual(-1, buildingsCount);
+        Assert.AreNotEqual(null, buildings);
     }
 }
