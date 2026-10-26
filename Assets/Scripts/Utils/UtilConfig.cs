@@ -73,4 +73,9 @@ public static class UtilConfig
         }
         return data.workerConfig.maxWorkers;
     }
+
+    public static MainConfig getConfig()
+    {
+    return data;
+    }
 }
