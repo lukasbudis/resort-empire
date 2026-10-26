@@ -29,6 +29,20 @@ public class ResourceConfig
         return $"ResourceConfig [coins: {coins}, maxEnergy: {maxEnergy}, currentEnergy: {currentEnergy}]";
     }
 }
+[Serializable]
+public class BuildingInitialState
+{
+    public string id;
+    public int level;
+}
+
+[Serializable]
+public class WorkerInitialState
+{
+    public string id;
+    public string buildingId;
+}
+
 
 
 [Serializable]
@@ -36,6 +50,8 @@ public class MainConfig
 {
     public WorkerConfig workerConfig;
     public ResourceConfig resourceConfig;
+    public BuildingInitialState[] buildings;
+    public WorkerInitialState[] workers;
 
     public override string ToString()
     {
