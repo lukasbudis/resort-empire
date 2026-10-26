@@ -7,7 +7,7 @@ public static class UtilConfig
     private static MainConfig data;
 
     public static void loadConfig(){
-        string m_Path = Path.Combine(Application.dataPath, "Configuration", "config.json");
+        string m_Path = Path.Combine(Application.persistentDataPath, "config.json");
         try 
         {
             if (!File.Exists(m_Path))
