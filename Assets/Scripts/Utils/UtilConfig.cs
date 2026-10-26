@@ -7,19 +7,10 @@ public static class UtilConfig
     private static MainConfig data;
 
     public static void loadConfig(){
-        string m_Path = Path.Combine(Application.persistentDataPath, "config.json");
         try 
         {
-            if (!File.Exists(m_Path))
-            {
-                throw new FileNotFoundException($"Konfiguračný súbor nebol nájdený na ceste: {m_Path}");
-            }
-            string content;
-
-            using (var sr = new StreamReader(m_Path))
-            {
-                content = sr.ReadToEnd();
-            }
+            TextAsset configFile = Resources.Load<TextAsset>("config");
+            string content = configFile.text;
 
             data = JsonUtility.FromJson<MainConfig>(content);
 
@@ -29,14 +20,6 @@ public static class UtilConfig
             }
 
             Debug.Log("JSON bol úspešne načítaný:\n" + data.ToString());
-        }
-        catch (FileNotFoundException ex)
-        {
-            Debug.LogError($"[Config Error] Súbor neexistuje: {ex.Message}");
-        }
-        catch (IOException ex)
-        {
-            Debug.LogError($"[Config Error] Problém so systémom súborov: {ex.Message}");
         }
         catch (Exception ex)
         {
