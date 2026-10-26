@@ -7,19 +7,10 @@ public static class UtilConfig
     private static MainConfig data;
 
     public static void loadConfig(){
-        string m_Path = Path.Combine(Application.dataPath, "Configuration", "config.json");
         try 
         {
-            if (!File.Exists(m_Path))
-            {
-                throw new FileNotFoundException($"Konfiguračný súbor nebol nájdený na ceste: {m_Path}");
-            }
-            string content;
-
-            using (var sr = new StreamReader(m_Path))
-            {
-                content = sr.ReadToEnd();
-            }
+            TextAsset configFile = Resources.Load<TextAsset>("config");
+            string content = configFile.text;
 
             data = JsonUtility.FromJson<MainConfig>(content);
 
@@ -29,14 +20,6 @@ public static class UtilConfig
             }
 
             Debug.Log("JSON bol úspešne načítaný:\n" + data.ToString());
-        }
-        catch (FileNotFoundException ex)
-        {
-            Debug.LogError($"[Config Error] Súbor neexistuje: {ex.Message}");
-        }
-        catch (IOException ex)
-        {
-            Debug.LogError($"[Config Error] Problém so systémom súborov: {ex.Message}");
         }
         catch (Exception ex)
         {
@@ -72,6 +55,56 @@ public static class UtilConfig
             return -1;
         }
         return data.workerConfig.maxWorkers;
+    }
+
+    public static BuildingInitialState[] getBuildings()
+    {
+        if (data == null) {
+            return null;
+        }
+        return data.buildings;
+    }
+
+    public static BuildingInitialState getBuildingByIndex(int i)
+    {
+        if (data == null || i > data.buildings.Length)
+        {
+            return null;
+        }
+        return data.buildings[i];
+    }
+
+    public static int getBuildingCount()
+    {
+        if (data == null) {
+            return -1;
+        }
+        return data.buildings.Length;
+    }
+
+    public static WorkerInitialState[] getWorkers()
+    {
+        if (data == null) {
+            return null;
+        }
+        return data.workers;
+    }
+
+    public static WorkerInitialState getWorkersByIndex(int i)
+    {
+        if (data == null || i > data.workers.Length)
+        {
+            return null;
+        }
+        return data.workers[i];
+    }
+
+    public static int getWorkersCount()
+    {
+        if (data == null) {
+            return -1;
+        }
+        return data.workers.Length;
     }
 
     public static MainConfig getConfig()
