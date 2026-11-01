@@ -1,12 +1,23 @@
 
+using System;
 using System.Collections.Generic;
 
 public class GameSimulation
 {
+    private readonly Dictionary<NeedType, BuildingService> buildingServices = new();
+
     public int TickCount { get; private set; } = 0;
     public bool IsPaused { get; private set; } = false;
 
     public WaveModel CurrentWave { get; private set; }
+
+    public void RegisterBuildingService(NeedType need, BuildingService service)
+    {
+        if (service == null)
+            throw new ArgumentNullException(nameof(service));
+
+        buildingServices[need] = service;
+    }
 
     public void StartWave(
         Dictionary<NeedType, int> demand,
@@ -18,6 +29,19 @@ public class GameSimulation
             availableNeeds,
             arrivalSeconds
         );
+
+        CurrentWave.NeedArrived += OnNeedArrived;
+    }
+
+    private void OnNeedArrived(NeedType need, int count)
+    {
+        if (!buildingServices.ContainsKey(need))
+            throw new InvalidOperationException($"No building service registered for need {need}.");
+
+        if (buildingServices.TryGetValue(need, out var service))
+        {
+            service.AddArrivals(count);
+        }
     }
 
     public void Step()
@@ -30,6 +54,11 @@ public class GameSimulation
         TickCount++;
 
         CurrentWave?.Step();
+
+        foreach (var service in buildingServices.Values)
+        {
+            service.Step();
+        }
     }
 
     public void Pause()
