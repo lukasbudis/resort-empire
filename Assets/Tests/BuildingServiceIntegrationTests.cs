@@ -5,6 +5,16 @@ using NUnit.Framework;
 public class BuildingServiceIntegrationTests
 {
     [Test]
+    public void MissingBuildingServiceReportsConfigurationError()
+    {
+        var simulation = new GameSimulation();
+        simulation.StartWave(
+            new Dictionary<NeedType, int> { { NeedType.Food, 1 } },
+            new[] { NeedType.Food }, 0.1f);
+        var error = Assert.Throws<System.InvalidOperationException>(() => simulation.Step());
+        StringAssert.Contains("Food", error.Message);
+    }
+    [Test]
     public void WaveArrivalsAreFullyServedByBuildings()
     {
         var simulation = new GameSimulation();
@@ -34,7 +44,7 @@ public class BuildingServiceIntegrationTests
 
         while (ticks < 200 &&
             (simulation.CurrentWave.Phase == WavePhase.Incoming ||
-             !rooms.IsIdle || !food.IsIdle || !drinks.IsIdle))
+             !rooms.IsEmpty || !food.IsEmpty || !drinks.IsEmpty))
         {
             simulation.Step();
             ticks++;
@@ -42,9 +52,9 @@ public class BuildingServiceIntegrationTests
 
         Assert.AreEqual(WavePhase.Draining, simulation.CurrentWave.Phase);
 
-        Assert.IsTrue(rooms.IsIdle);
-        Assert.IsTrue(food.IsIdle);
-        Assert.IsTrue(drinks.IsIdle);
+        Assert.IsTrue(rooms.IsEmpty);
+        Assert.IsTrue(food.IsEmpty);
+        Assert.IsTrue(drinks.IsEmpty);
 
         Assert.AreEqual(7, rooms.TotalArrived);
         Assert.AreEqual(5, food.TotalArrived);
@@ -100,7 +110,7 @@ public class BuildingServiceIntegrationTests
             simulation.Step();
 
         Assert.AreEqual(3, food.TotalServed);
-        Assert.IsTrue(food.IsIdle);
+        Assert.IsTrue(food.IsEmpty);
     }
 
 }

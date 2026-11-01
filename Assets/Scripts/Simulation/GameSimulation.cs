@@ -35,6 +35,9 @@ public class GameSimulation
 
     private void OnNeedArrived(NeedType need, int count)
     {
+        if (!buildingServices.ContainsKey(need))
+            throw new InvalidOperationException($"No building service registered for need {need}.");
+
         if (buildingServices.TryGetValue(need, out var service))
         {
             service.AddArrivals(count);

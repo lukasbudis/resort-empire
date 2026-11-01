@@ -20,7 +20,7 @@ public class BuildingService
     public int WaitingCount => waitingUnits.Count;
     public int ActiveCount { get; private set; }
 
-    public bool IsIdle => WaitingCount == 0 && ActiveCount == 0;
+    public bool IsEmpty => WaitingCount == 0 && ActiveCount == 0;
 
     public BuildingService(
         int capacity,
@@ -46,7 +46,8 @@ public class BuildingService
         serviceTicks = Math.Max(
             1,
             (int)Math.Ceiling(
-                serviceSeconds / (TickSeconds * performanceMultiplier)
+                // Ignore float representation noise at exact tick boundaries.
+                (double)serviceSeconds / (TickSeconds * (double)performanceMultiplier) - 1e-6
             )
         );
     }

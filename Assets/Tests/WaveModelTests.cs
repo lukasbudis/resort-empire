@@ -85,6 +85,7 @@ public class WaveModelTests
     public void PauseStopsWaveProgress()
     {
         var simulation = new GameSimulation();
+        simulation.RegisterBuildingService(NeedType.Drinks, new BuildingService(1, 0.1f));
 
         simulation.StartWave(
             new Dictionary<NeedType, int>

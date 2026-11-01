@@ -3,6 +3,26 @@ using NUnit.Framework;
 
 public class BuildingServiceTests
 {
+    [TestCase(0.3f, 1f, 3)]
+    [TestCase(0.6f, 1f, 6)]
+    [TestCase(1.1f, 1f, 11)]
+    [TestCase(2.7f, 1f, 27)]
+    [TestCase(0.31f, 1f, 4)]
+    [TestCase(0.3001f, 1f, 4)]
+    [TestCase(0.3f, 0.5f, 6)]
+    [TestCase(0.6f, 2f, 3)]
+    [TestCase(0.01f, 1f, 1)]
+    public void ServiceCompletesOnExpectedTick(float seconds, float performance, int ticks)
+    {
+        var service = new BuildingService(1, seconds, performance);
+        service.AddArrivals(1);
+        for (int i = 0; i < ticks - 1; i++)
+            service.Step();
+        Assert.AreEqual(0, service.TotalServed);
+        service.Step();
+        Assert.AreEqual(1, service.TotalServed);
+        Assert.IsTrue(service.IsEmpty);
+    }
     [Test]
     public void ArrivalsOccupyFreeSlots()
     {
@@ -36,7 +56,7 @@ public class BuildingServiceTests
         service.Step();
 
         Assert.AreEqual(3, service.TotalServed);
-        Assert.IsTrue(service.IsIdle);
+        Assert.IsTrue(service.IsEmpty);
     }
 
     [Test]
@@ -54,7 +74,7 @@ public class BuildingServiceTests
         service.Step();
 
         Assert.AreEqual(1, service.TotalServed);
-        Assert.IsTrue(service.IsIdle);
+        Assert.IsTrue(service.IsEmpty);
     }
 
     [Test]
@@ -71,7 +91,7 @@ public class BuildingServiceTests
         Assert.AreEqual(20, service.TotalServed);
         Assert.AreEqual(0, service.WaitingCount);
         Assert.AreEqual(0, service.ActiveCount);
-        Assert.IsTrue(service.IsIdle);
+        Assert.IsTrue(service.IsEmpty);
     }
 
     [Test]
