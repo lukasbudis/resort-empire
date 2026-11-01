@@ -1,6 +1,7 @@
 {
     "workerConfig": {
-        "maxWorkers": 10
+        "maxWorkers": 10,
+        "unstaffedPerformanceMultiplier": 0.33
     },
     "resourceConfig": {
         "coins": 500,
