@@ -10,6 +10,17 @@ public class UtilClasses
 public class WorkerConfig
 {
     public int maxWorkers;
+    public float unstaffedPerformanceMultiplier = 0.33f;
+
+    public void Validate()
+    {
+        if (float.IsNaN(unstaffedPerformanceMultiplier) ||
+            float.IsInfinity(unstaffedPerformanceMultiplier) ||
+            unstaffedPerformanceMultiplier <= 0f ||
+            unstaffedPerformanceMultiplier >= 1f)
+            throw new ArgumentOutOfRangeException(nameof(unstaffedPerformanceMultiplier),
+                "Unstaffed performance must be greater than zero and less than one.");
+    }
 
     public override string ToString()
     {
