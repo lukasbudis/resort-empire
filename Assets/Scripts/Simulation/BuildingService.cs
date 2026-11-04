@@ -10,6 +10,8 @@ public class BuildingService
     private readonly int[] activeUnitIds;
     private readonly int[] remainingTicks;
     private readonly int serviceTicks;
+    private readonly float serviceSeconds;
+    private readonly float performanceMultiplier;
 
     private int nextUnitId = 1;
 
@@ -21,6 +23,9 @@ public class BuildingService
     public int ActiveCount { get; private set; }
 
     public bool IsEmpty => WaitingCount == 0 && ActiveCount == 0;
+
+    // FR-09: seats × performance ÷ current service time, units per second.
+    public double ServiceRate => Capacity * (double)performanceMultiplier / serviceSeconds;
 
     public BuildingService(
         int capacity,
@@ -42,6 +47,8 @@ public class BuildingService
 
         activeUnitIds = new int[capacity];
         remainingTicks = new int[capacity];
+        this.serviceSeconds = serviceSeconds;
+        this.performanceMultiplier = performanceMultiplier;
 
         serviceTicks = Math.Max(
             1,

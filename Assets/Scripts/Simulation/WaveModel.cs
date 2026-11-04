@@ -28,6 +28,7 @@ public class WaveModel
 
     public WavePhase Phase { get; private set; } = WavePhase.Incoming;
     public int ElapsedTicks { get; private set; }
+    public float ArrivalSeconds { get; }
 
     public IReadOnlyDictionary<NeedType, int> TotalDemand => totalDemand;
     public IReadOnlyDictionary<NeedType, int> Arrived => arrived;
@@ -51,6 +52,7 @@ public class WaveModel
             arrivalSeconds <= 0f)
             throw new ArgumentException("Invalid arrival duration.");
 
+        ArrivalSeconds = arrivalSeconds;
         arrivalTicks = Math.Max(
             1,
             (int)Math.Round(arrivalSeconds / TickSeconds)
@@ -109,5 +111,13 @@ public class WaveModel
     public int GetArrivedCount(NeedType need)
     {
         return arrived.TryGetValue(need, out int count) ? count : 0;
+    }
+
+    // FR-09: volume of the need in this wave ÷ arrival duration, units per second.
+    public double GetArrivalRate(NeedType need)
+    {
+        return totalDemand.TryGetValue(need, out int count)
+            ? count / (double)ArrivalSeconds
+            : 0.0;
     }
 }

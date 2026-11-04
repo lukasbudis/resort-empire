@@ -29,6 +29,25 @@ public class WorkerConfig
 }
 
 [Serializable]
+public class NeedStateConfig
+{
+    // Waiting units (seated ones excluded) above which a need can enter BOTTLENECK (FR-09).
+    public int bottleneckThreshold = 4;
+
+    public void Validate()
+    {
+        if (bottleneckThreshold < 0)
+            throw new ArgumentOutOfRangeException(nameof(bottleneckThreshold),
+                "Bottleneck threshold cannot be negative.");
+    }
+
+    public override string ToString()
+    {
+        return $"NeedStateConfig [bottleneckThreshold: {bottleneckThreshold}]";
+    }
+}
+
+[Serializable]
 public class ResourceConfig
 {
     public int coins;
@@ -60,12 +79,13 @@ public class WorkerInitialState
 public class MainConfig
 {
     public WorkerConfig workerConfig;
+    public NeedStateConfig needStateConfig;
     public ResourceConfig resourceConfig;
     public BuildingInitialState[] buildings;
     public WorkerInitialState[] workers;
 
     public override string ToString()
     {
-        return $"MainConfig:\n  {workerConfig}\n  {resourceConfig}";
+        return $"MainConfig:\n  {workerConfig}\n  {needStateConfig}\n  {resourceConfig}";
     }
 }
