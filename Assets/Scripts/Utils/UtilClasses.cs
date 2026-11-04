@@ -32,13 +32,14 @@ public class WorkerConfig
 public class NeedStateConfig
 {
     // Waiting units (seated ones excluded) above which a need can enter BOTTLENECK (FR-09).
-    public int bottleneckThreshold = 4;
+    // JsonUtility keeps this value when the key is missing, so -1 makes it mandatory.
+    public int bottleneckThreshold = -1;
 
     public void Validate()
     {
         if (bottleneckThreshold < 0)
             throw new ArgumentOutOfRangeException(nameof(bottleneckThreshold),
-                "Bottleneck threshold cannot be negative.");
+                "needStateConfig.bottleneckThreshold must be set and cannot be negative.");
     }
 
     public override string ToString()

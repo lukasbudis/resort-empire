@@ -172,6 +172,18 @@ public class NeedStateMachineTests
         Assert.AreEqual(NeedState.Satisfied, machine.State);
     }
 
+    [Test]
+    public void BottleneckPassesThroughRecoveringBeforeSatisfied()
+    {
+        var machine = InBottleneck();
+
+        machine.Update(true, 0, 0, SlowService, ArrivalRate);
+        Assert.AreEqual(NeedState.Recovering, machine.State);
+
+        machine.Update(true, 0, 0, SlowService, ArrivalRate);
+        Assert.AreEqual(NeedState.Satisfied, machine.State);
+    }
+
     [TestCase(false, 0, 0)]
     [TestCase(true, 1, 0)]
     [TestCase(true, 0, 1)]

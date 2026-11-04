@@ -120,25 +120,93 @@ public class NeedStateIntegrationTests
         CollectionAssert.DoesNotContain(RunToEnd(highThreshold, NeedType.Food), NeedState.Bottleneck);
     }
 
+    // Slow wave: 40 units in 10 s against one seat served in 1 s. The queue grows
+    // by at most one unit per tick, so the warning starts exactly when one unit
+    // more than the threshold is waiting.
+    private static int WaitingWhenBottleneckStarts(int bottleneckThreshold)
+    {
+        var food = new BuildingService(1, 1f);
+        var simulation = StartSingleNeedWave(NeedType.Food, food, 40, 10f, bottleneckThreshold);
+
+        while (simulation.TickCount < 1000)
+        {
+            simulation.Step();
+            if (simulation.GetNeedState(NeedType.Food) == NeedState.Bottleneck)
+                return food.WaitingCount;
+        }
+
+        return -1;
+    }
+
     [Test]
     public void ProjectConfigThresholdDrivesSimulation()
     {
         var config = UtilConfig.ParseConfig(Resources.Load<TextAsset>("config").text);
-        var food = new BuildingService(1, 1f);
-        var simulation = StartSingleNeedWave(
-            NeedType.Food, food, 20, 10f, config.needStateConfig.bottleneckThreshold);
 
-        // The queue grows by at most one unit per tick, so the warning starts
-        // exactly when one unit more than the threshold is waiting.
-        int waitingAtBottleneck = -1;
-        while (waitingAtBottleneck < 0 && simulation.TickCount < 1000)
+        Assert.AreEqual(
+            config.needStateConfig.bottleneckThreshold + 1,
+            WaitingWhenBottleneckStarts(config.needStateConfig.bottleneckThreshold));
+    }
+
+    [Test]
+    public void ParsedThresholdDrivesSimulation()
+    {
+        var config = UtilConfig.ParseConfig(
+            "{\"workerConfig\":{\"unstaffedPerformanceMultiplier\":0.33}," +
+            "\"needStateConfig\":{\"bottleneckThreshold\":7},\"resourceConfig\":{}}");
+
+        Assert.AreEqual(8, WaitingWhenBottleneckStarts(config.needStateConfig.bottleneckThreshold));
+    }
+
+    [Test]
+    public void RoundedServiceTimeCountsAsSlowerService()
+    {
+        // 0,25 s rounds up to 3 ticks: on paper 4/s like the arrival, really 3,33/s.
+        var drinks = new BuildingService(1, 0.25f);
+        var simulation = StartSingleNeedWave(NeedType.Drinks, drinks, 40, 10f);
+
+        CollectionAssert.Contains(RunToEnd(simulation, NeedType.Drinks), NeedState.Bottleneck);
+    }
+
+    [Test]
+    public void HandlerStartingNextWaveGetsNoStaleEvents()
+    {
+        var simulation = new GameSimulation();
+        simulation.StartWave(
+            new Dictionary<NeedType, int> { { NeedType.Food, 0 }, { NeedType.Drinks, 0 } },
+            new[] { NeedType.Food, NeedType.Drinks },
+            0.1f);
+
+        var events = new List<NeedType>();
+        simulation.NeedStateChanged += (need, state) =>
         {
-            simulation.Step();
-            if (simulation.GetNeedState(NeedType.Food) == NeedState.Bottleneck)
-                waitingAtBottleneck = food.WaitingCount;
-        }
+            events.Add(need);
+            if (events.Count == 1)
+                simulation.StartWave(
+                    new Dictionary<NeedType, int> { { NeedType.Food, 5 }, { NeedType.Drinks, 5 } },
+                    new[] { NeedType.Food, NeedType.Drinks },
+                    10f);
+        };
 
-        Assert.AreEqual(config.needStateConfig.bottleneckThreshold + 1, waitingAtBottleneck);
+        simulation.Step();
+
+        Assert.AreEqual(1, events.Count);
+        Assert.AreEqual(NeedState.Ok, simulation.GetNeedState(NeedType.Food));
+        Assert.AreEqual(NeedState.Ok, simulation.GetNeedState(NeedType.Drinks));
+    }
+
+    [Test]
+    public void EmptyWaveFinishesOnlyAfterArrivalCloses()
+    {
+        var simulation = new GameSimulation();
+        simulation.StartWave(new Dictionary<NeedType, int>(), new NeedType[0], 1f);
+
+        Assert.IsFalse(simulation.AllNeedsSatisfied);
+
+        for (int i = 0; i < 10; i++)
+            simulation.Step();
+
+        Assert.IsTrue(simulation.AllNeedsSatisfied);
     }
 
     [Test]

@@ -25,7 +25,7 @@ public class NeedStateMachine
         this.bottleneckThreshold = bottleneckThreshold;
     }
 
-    // Rates are units per second. Returns true when the state changed.
+    // Both rates must use the same time unit. Returns true when the state changed.
     public bool Update(
         bool arrivalClosed,
         int waitingCount,
@@ -65,7 +65,9 @@ public class NeedStateMachine
         if (State == NeedState.Satisfied)
             return NeedState.Satisfied;
 
-        if (arrivalClosed && waitingCount == 0 && servingCount == 0)
+        // Bottleneck first passes through Recovering (Build document, need states).
+        if (State != NeedState.Bottleneck &&
+            arrivalClosed && waitingCount == 0 && servingCount == 0)
             return NeedState.Satisfied;
 
         bool entersBottleneck =

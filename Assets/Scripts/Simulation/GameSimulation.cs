@@ -16,6 +16,7 @@ public class GameSimulation
 
     public bool AllNeedsSatisfied =>
         CurrentWave != null &&
+        CurrentWave.Phase == WavePhase.Draining &&
         needStates.Values.All(state => state.State == NeedState.Satisfied);
 
     public event Action<NeedType, NeedState> NeedStateChanged;
@@ -99,7 +100,8 @@ public class GameSimulation
         if (CurrentWave == null)
             return;
 
-        bool arrivalClosed = CurrentWave.Phase == WavePhase.Draining;
+        WaveModel wave = CurrentWave;
+        bool arrivalClosed = wave.Phase == WavePhase.Draining;
         var changes = new List<(NeedType need, NeedState state)>();
 
         foreach (var pair in needStates)
@@ -110,16 +112,22 @@ public class GameSimulation
                 arrivalClosed,
                 service?.WaitingCount ?? 0,
                 service?.ActiveCount ?? 0,
-                service?.ServiceRate ?? 0.0,
-                CurrentWave.GetArrivalRate(pair.Key)))
+                service?.ServiceRatePerTick ?? 0.0,
+                wave.GetArrivalRatePerTick(pair.Key)))
             {
                 changes.Add((pair.Key, pair.Value.State));
             }
         }
 
-        // Raised after the loop so a handler may safely start the next wave.
+        // Raised after the loop, so a handler may start the next wave;
+        // the remaining changes of the finished wave are then dropped.
         foreach (var change in changes)
+        {
+            if (CurrentWave != wave)
+                break;
+
             NeedStateChanged?.Invoke(change.need, change.state);
+        }
     }
 
     public void Pause()
