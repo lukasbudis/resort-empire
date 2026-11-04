@@ -110,4 +110,12 @@ public class WaveModel
     {
         return arrived.TryGetValue(need, out int count) ? count : 0;
     }
+
+    // FR-09: volume of the need in this wave ÷ arrival duration, in units per tick.
+    public double GetArrivalRatePerTick(NeedType need)
+    {
+        return totalDemand.TryGetValue(need, out int count)
+            ? count / (double)arrivalTicks
+            : 0.0;
+    }
 }

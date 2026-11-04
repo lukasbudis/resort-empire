@@ -61,6 +61,25 @@ public class ConfigurationTests
     }
 
     [Test]
+    public void ProjectConfigDefinesBottleneckThreshold()
+    {
+        var config = UtilConfig.ParseConfig(
+            UnityEngine.Resources.Load<UnityEngine.TextAsset>("config").text);
+        Assert.AreEqual(4, config.needStateConfig.bottleneckThreshold);
+    }
+
+    [TestCase("\"needStateConfig\":{\"bottleneckThreshold\":-1},")]
+    [TestCase("\"needStateConfig\":{\"bottleneckTreshold\":9},")]
+    [TestCase("")]
+    public void MissingOrNegativeBottleneckThresholdIsRejected(string needStateSection)
+    {
+        string json = "{\"workerConfig\":{\"unstaffedPerformanceMultiplier\":0.33}," +
+            needStateSection + "\"resourceConfig\":{}}";
+        var error = Assert.Throws<System.ArgumentOutOfRangeException>(() => UtilConfig.ParseConfig(json));
+        Assert.AreEqual("bottleneckThreshold", error.ParamName);
+    }
+
+    [Test]
     public void ProjectConfigUsesDefaultUnstaffedPerformance()
     {
         var config = UtilConfig.ParseConfig(

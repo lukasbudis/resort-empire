@@ -46,6 +46,9 @@ public static class UtilConfig
         if (config == null || config.resourceConfig == null || config.workerConfig == null)
             throw new ArgumentException("Configuration requires workerConfig and resourceConfig.");
         config.workerConfig.Validate();
+        if (config.needStateConfig == null)
+            throw new ArgumentException("Configuration requires needStateConfig.");
+        config.needStateConfig.Validate();
         return config;
     }
     public static int getCurrentEnergy()

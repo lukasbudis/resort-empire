@@ -22,6 +22,11 @@ public class BuildingService
 
     public bool IsEmpty => WaitingCount == 0 && ActiveCount == 0;
 
+    // FR-09: seats × performance ÷ service time, in units per tick. Uses the
+    // service time as simulated (rounded up to whole ticks), so the rate
+    // matches how fast the building really serves.
+    public double ServiceRatePerTick => Capacity / (double)serviceTicks;
+
     public BuildingService(
         int capacity,
         float serviceSeconds,

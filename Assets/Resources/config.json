@@ -3,6 +3,9 @@
         "maxWorkers": 10,
         "unstaffedPerformanceMultiplier": 0.33
     },
+    "needStateConfig": {
+        "bottleneckThreshold": 4
+    },
     "resourceConfig": {
         "coins": 500,
         "maxEnergy": 50,
