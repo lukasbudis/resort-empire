@@ -84,6 +84,34 @@ public class WorkerInitialState
 }
 
 [Serializable]
+public class NeedsConfig
+{
+    public int rooms;
+    public int drinks;
+    public int food;
+    public int relax;
+    public int ocean_view;
+
+}
+
+[Serializable]
+public class WavesConfig
+{
+    public int wave_id;
+    public int guests;
+    public NeedsConfig needs;
+
+}
+
+[Serializable]
+public class WaveSettingsConfig
+{
+    public float wave_timer;
+    public WavesConfig[] waves;
+
+}
+
+[Serializable]
 public class MainConfig
 {
     public WorkerConfig workerConfig;
@@ -91,6 +119,7 @@ public class MainConfig
     public ResourceConfig resourceConfig;
     public BuildingsConfig[] buildings;
     public WorkerInitialState[] workers;
+    public WaveSettingsConfig wave_settings;
 
     public override string ToString()
     {
