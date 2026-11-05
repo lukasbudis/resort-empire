@@ -131,6 +131,24 @@ public static class UtilConfig
         return data.buildings.Length;
     }
 
+    public static int getWavesCount()
+    {
+        if (data == null)
+        {
+            return -1;
+        }
+        return data.wave_settings.waves.Length;
+    }
+
+    public static WavesConfig getWaveByIndex(int i)
+    {
+        if (data == null || i >= data.wave_settings.waves.Length || i < 0)
+        {
+            return null;
+        }
+        return data.wave_settings.waves[i];
+    }
+
     public static WavesConfig getWaveById(int waveId)
     {
         if (data == null || data.wave_settings == null || data.wave_settings.waves == null) 

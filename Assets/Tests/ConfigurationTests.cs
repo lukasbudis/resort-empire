@@ -107,4 +107,32 @@ public class ConfigurationTests
         Assert.AreNotEqual(-1, buildingsCount);
         Assert.AreNotEqual(null, buildings);
     }
+    
+    [Test]
+    public void ConfigContainsExactlyEightWavesWithNonNegativeVolumes()
+    {
+        UtilConfig.loadConfig();
+
+        int wave_count = UtilConfig.getWavesCount();
+        Assert.AreEqual(8, wave_count, "Konfigurácia neobsahuje presne 8 vĺn!");
+
+        for (int i = 0; i < wave_count; i++)
+        {
+            var wave = UtilConfig.getWaveByIndex(i);
+
+            Assert.IsNotNull(wave, $"Vlna na indexe {i} je null!");
+
+            int checkedRooms = UtilConfig.getNeedVolumeForWave(wave.wave_id, "rooms");
+            int checkedDrinks = UtilConfig.getNeedVolumeForWave(wave.wave_id, "drinks");
+            int checkedFood = UtilConfig.getNeedVolumeForWave(wave.wave_id, "food");
+            int checkedRelax = UtilConfig.getNeedVolumeForWave(wave.wave_id, "relax");
+            int checkedOceanView = UtilConfig.getNeedVolumeForWave(wave.wave_id, "ocean_view");
+
+            Assert.GreaterOrEqual(checkedRooms, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'rooms'!");
+            Assert.GreaterOrEqual(checkedDrinks, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'drinks'!");
+            Assert.GreaterOrEqual(checkedFood, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'food'!");
+            Assert.GreaterOrEqual(checkedRelax, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'relax'!");
+            Assert.GreaterOrEqual(checkedOceanView, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'ocean_view'!");
+        }
+    }
 }
