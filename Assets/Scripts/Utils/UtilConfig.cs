@@ -59,13 +59,6 @@ public static class UtilConfig
         return data.resourceConfig.currentEnergy;
     }
 
-    public static int getMaxEnergy()
-    {
-        if (data == null) {
-            return -1;
-        }
-        return data.resourceConfig.maxEnergy;
-    }
     public static int getCoins()
     {
         if (data == null) {
@@ -81,7 +74,7 @@ public static class UtilConfig
         return data.workerConfig.maxWorkers;
     }
 
-    public static BuildingInitialState[] getBuildings()
+    public static BuildingsConfig[] getBuildings()
     {
         if (data == null) {
             return null;
@@ -89,7 +82,7 @@ public static class UtilConfig
         return data.buildings;
     }
 
-    public static BuildingInitialState getBuildingByIndex(int i)
+    public static BuildingsConfig getBuildingByIndex(int i)
     {
         if (data == null || i > data.buildings.Length)
         {
