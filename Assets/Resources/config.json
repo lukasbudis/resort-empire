@@ -8,16 +8,75 @@
     },
     "resourceConfig": {
         "coins": 500,
-        "maxEnergy": 50,
         "currentEnergy": 32
     },
     "buildings": [
-      { "id": "Reception", "level": 1 },
-      { "id": "Restaurant", "level": 1 },
-      { "id": "BeachBar", "level": 1 }
+        {
+            "id": "Reception",
+            "need": "rooms",
+            "service_time": 12.0,
+            "levels": [
+                { "level": 1, "capacity": 3 },
+                { "level": 2, "capacity": 5 },
+                { "level": 3, "capacity": 7 }
+            ]
+        },
+        {
+            "id": "Restaurant",
+            "need": "food",
+            "service_time": 12.0,
+            "levels": [
+                { "level": 1, "capacity": 3 },
+                { "level": 2, "capacity": 5 },
+                { "level": 3, "capacity": 7 }
+            ]
+        },
+        {
+            "id": "BeachBar",
+            "need": "drinks",
+            "service_time": 12.0,
+            "levels": [
+                { "level": 1, "capacity": 3 },
+                { "level": 2, "capacity": 5 },
+                { "level": 3, "capacity": 7 }
+            ]
+        },
+        {
+            "id": "Pool",
+            "need": "relax",
+            "service_time": 12.0,
+            "levels": [
+                { "level": 1, "capacity": 3 },
+                { "level": 2, "capacity": 5 },
+                { "level": 3, "capacity": 7 }
+            ]
+        },
+        {
+            "id": "Bungalows",
+            "need": "ocean_view",
+            "service_time": 12.0,
+            "levels": [
+                { "level": 1, "capacity": 3 },
+                { "level": 2, "capacity": 5 },
+                { "level": 3, "capacity": 7 }
+            ]
+        }
     ],
     "workers": [
       { "id": "Worker1", "buildingId": "Reception" },
       { "id": "Worker2", "buildingId": "Restaurant" }
-    ]
+    ],
+    "wave_settings": {
+        "wave_timer": 90.0,
+          "waves": [
+            { "wave_id": 1, "guests": 12, "needs": { "rooms": 8, "drinks": 8, "food": 6 } },
+            { "wave_id": 2, "guests": 18, "needs": { "rooms": 12, "drinks": 16, "food": 10 } },
+            { "wave_id": 3, "guests": 24, "needs": { "rooms": 16, "drinks": 18, "food": 14 } },
+            { "wave_id": 4, "guests": 26, "needs": { "rooms": 16, "drinks": 18, "food": 14, "relax": 8 } },
+            { "wave_id": 5, "guests": 34, "needs": { "rooms": 20, "drinks": 22, "food": 18, "relax": 16 } },
+            { "wave_id": 6, "guests": 40, "needs": { "rooms": 25, "drinks": 28, "food": 22, "relax": 20 } },
+            { "wave_id": 7, "guests": 42, "needs": { "rooms": 25, "drinks": 28, "food": 22, "relax": 20, "ocean_view": 10 } },
+            { "wave_id": 8, "guests": 52, "needs": { "rooms": 31, "drinks": 35, "food": 28, "relax": 25, "ocean_view": 16 } }
+        ]
+    }
 }

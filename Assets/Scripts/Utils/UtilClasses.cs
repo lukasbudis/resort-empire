@@ -52,19 +52,28 @@ public class NeedStateConfig
 public class ResourceConfig
 {
     public int coins;
-    public int maxEnergy;
     public int currentEnergy;
 
     public override string ToString()
     {
-        return $"ResourceConfig [coins: {coins}, maxEnergy: {maxEnergy}, currentEnergy: {currentEnergy}]";
+        return $"ResourceConfig [coins: {coins}, currentEnergy: {currentEnergy}]";
     }
 }
+
 [Serializable]
-public class BuildingInitialState
+public class LevelConfig
+{
+    public int level;
+    public int capacity;
+}
+
+[Serializable]
+public class BuildingsConfig
 {
     public string id;
-    public int level;
+    public string need;
+    public float service_time;
+    public LevelConfig[] levels;
 }
 
 [Serializable]
@@ -74,7 +83,33 @@ public class WorkerInitialState
     public string buildingId;
 }
 
+[Serializable]
+public class NeedsConfig
+{
+    public int rooms;
+    public int drinks;
+    public int food;
+    public int relax;
+    public int ocean_view;
 
+}
+
+[Serializable]
+public class WavesConfig
+{
+    public int wave_id;
+    public int guests;
+    public NeedsConfig needs;
+
+}
+
+[Serializable]
+public class WaveSettingsConfig
+{
+    public float wave_timer;
+    public WavesConfig[] waves;
+
+}
 
 [Serializable]
 public class MainConfig
@@ -82,8 +117,9 @@ public class MainConfig
     public WorkerConfig workerConfig;
     public NeedStateConfig needStateConfig;
     public ResourceConfig resourceConfig;
-    public BuildingInitialState[] buildings;
+    public BuildingsConfig[] buildings;
     public WorkerInitialState[] workers;
+    public WaveSettingsConfig wave_settings;
 
     public override string ToString()
     {

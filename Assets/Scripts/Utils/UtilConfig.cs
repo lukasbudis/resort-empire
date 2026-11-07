@@ -59,13 +59,6 @@ public static class UtilConfig
         return data.resourceConfig.currentEnergy;
     }
 
-    public static int getMaxEnergy()
-    {
-        if (data == null) {
-            return -1;
-        }
-        return data.resourceConfig.maxEnergy;
-    }
     public static int getCoins()
     {
         if (data == null) {
@@ -81,7 +74,7 @@ public static class UtilConfig
         return data.workerConfig.maxWorkers;
     }
 
-    public static BuildingInitialState[] getBuildings()
+    public static BuildingsConfig[] getBuildings()
     {
         if (data == null) {
             return null;
@@ -89,13 +82,45 @@ public static class UtilConfig
         return data.buildings;
     }
 
-    public static BuildingInitialState getBuildingByIndex(int i)
+    public static BuildingsConfig getBuildingByIndex(int i)
     {
-        if (data == null || i > data.buildings.Length)
+        if (data == null || i >= data.buildings.Length || i < 0)
         {
             return null;
         }
         return data.buildings[i];
+    }
+
+    public static BuildingsConfig getBuildingsById(string id)
+    {
+        if (data == null)
+        {
+            return null;
+        }
+
+        foreach (var building in data.buildings)
+        {
+            if (id.Equals(building.id))
+            {
+                return building;
+            }
+        }
+        return null;
+    }
+
+    public static LevelConfig getBuildingLevelData(string buildingId, int level)
+    {
+        var building = getBuildingsById(buildingId);
+        if (building == null || building.levels == null) return null;
+
+        foreach (var blevel in building.levels)
+        {
+            if (blevel.level == level)
+            {
+                return blevel;
+            }
+        }
+        return null;
     }
 
     public static int getBuildingCount()
@@ -104,6 +129,55 @@ public static class UtilConfig
             return -1;
         }
         return data.buildings.Length;
+    }
+
+    public static int getWavesCount()
+    {
+        if (data == null)
+        {
+            return -1;
+        }
+        return data.wave_settings.waves.Length;
+    }
+
+    public static WavesConfig getWaveByIndex(int i)
+    {
+        if (data == null || i >= data.wave_settings.waves.Length || i < 0)
+        {
+            return null;
+        }
+        return data.wave_settings.waves[i];
+    }
+
+    public static WavesConfig getWaveById(int waveId)
+    {
+        if (data == null || data.wave_settings == null || data.wave_settings.waves == null) 
+            return null;
+            
+        foreach (var wave in data.wave_settings.waves)
+        {
+            if (wave.wave_id == waveId)
+            {
+                return wave;
+            }
+        }
+        return null;
+    }
+
+    public static int getNeedVolumeForWave(int waveId, string needName)
+    {
+        var wave = getWaveById(waveId);
+        if (wave == null || wave.needs == null) return 0;
+        
+        switch (needName.ToLower())
+        {
+            case "rooms": return wave.needs.rooms;
+            case "drinks": return wave.needs.drinks;
+            case "food": return wave.needs.food;
+            case "relax": return wave.needs.relax;
+            case "ocean_view": return wave.needs.ocean_view;
+            default: return 0; // Ak sa zadá neznáma potreba
+        }
     }
 
     public static WorkerInitialState[] getWorkers()
@@ -116,7 +190,7 @@ public static class UtilConfig
 
     public static WorkerInitialState getWorkersByIndex(int i)
     {
-        if (data == null || i > data.workers.Length)
+        if (data == null || i >= data.workers.Length || i < 0)
         {
             return null;
         }
