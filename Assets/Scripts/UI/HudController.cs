@@ -11,7 +11,6 @@ public class HudController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        UtilConfig.loadConfig(); // Toto presunut do nejakej Load metody co sa spustí na začiatku. Teraz ešte taká metóda asi neexistuje
         MainConfig config = UtilConfig.getConfig();
         if (config == null || config.resourceConfig == null)
         {
