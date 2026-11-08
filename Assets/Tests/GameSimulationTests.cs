@@ -192,7 +192,7 @@ namespace ResortEmpire
 
                     float performance = global::UtilConfig.GetBuildingPerformanceMultiplierById(bId);
                     
-                    var service = new BuildingService(levelData.capacity, building.service_time, performance);
+                    var service = new BuildingService(levelData.capacity, UtilConfig.getServiceTimeById(bId), performance);
 
                     simulation.RegisterBuildingService(need, service);
                     buildingNeeds.Add(bId, need);
