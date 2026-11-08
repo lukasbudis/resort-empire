@@ -164,6 +164,22 @@ public static class UtilConfig
         return null;
     }
 
+    public static float getWaveTimer()
+    {
+        if (data == null || data.wave_settings == null) {
+            return -1f;
+        }
+        return data.wave_settings.wave_timer;
+    }
+
+    public static float GetBuildingPerformanceMultiplierById(string buildingId)
+    {
+        if (data == null)
+            throw new InvalidOperationException("Konfigurácia nie je načítaná.");
+            
+        return GetBuildingPerformanceMultiplier(data, buildingId);
+    }
+
     public static int getNeedVolumeForWave(int waveId, string needName)
     {
         var wave = getWaveById(waveId);
@@ -203,6 +219,14 @@ public static class UtilConfig
             return -1;
         }
         return data.workers.Length;
+    }
+
+    public static int getBottleneckThreshold()
+    {
+        if (data == null) {
+            return -1;
+        }
+        return data.needStateConfig.bottleneckThreshold;
     }
 
     public static MainConfig getConfig()
