@@ -26,7 +26,6 @@ public static class UtilConfig
 
         try
         {
-            fastMode = true;
             TextAsset fastModeConfigFile = Resources.Load<TextAsset>("config_fast");
             string content = fastModeConfigFile.text;
 
