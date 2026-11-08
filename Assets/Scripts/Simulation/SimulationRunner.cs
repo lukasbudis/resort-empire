@@ -134,11 +134,21 @@ namespace ResortEmpire
         [ContextMenu("Start Next Wave")]
         public void StartNextWave()
         {
+            if (CurrentState == GameState.AllWavesCompleted)
+                return;
+
+            if (simulation == null || CurrentState != GameState.AwaitingWave)
+                return;
+
             if (gameCycle == null) return;
 
             try
             {
                 gameCycle.StartNextWave();
+                
+                if (CurrentState != GameState.WaveInProgress)
+                    return;
+
                 accumulatedTime = 0f;
 
                 foreach (string buildingId in availableBuildingIds)

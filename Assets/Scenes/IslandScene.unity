@@ -1237,6 +1237,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8296984835626902703, guid: 9f7ac778afb2fa04da65f1e910392ac4, type: 3}
+      propertyPath: runner
+      value: 
+      objectReference: {fileID: 2128252996}
+    - target: {fileID: 8296984835626902703, guid: 9f7ac778afb2fa04da65f1e910392ac4, type: 3}
       propertyPath: fastModeButton
       value: 
       objectReference: {fileID: 19248526}
