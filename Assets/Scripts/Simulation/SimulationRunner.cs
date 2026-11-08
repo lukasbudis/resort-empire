@@ -79,6 +79,22 @@ private void LogWaveDiagnostics() /*dočasná diagnostika*/
         public event Action<NeedType, NeedState> NeedStateChanged;
         public event Action<int> WaveCompleted;
 
+        // Raised after every simulation tick of a running wave, so UI can refresh (S2).
+        public event Action Ticked;
+
+        // Rows for the S2 panel; null outside a running wave (FR-35, FR-36).
+        public NeedsPanelData GetNeedsPanelData()
+        {
+            if (simulation?.CurrentWave == null || CurrentState != GameState.WaveInProgress)
+                return null;
+
+            return NeedsPanelPresenter.Build(
+                activeWaveId,
+                simulation.CurrentWave.TotalDemand,
+                simulation.ServedThisWave,
+                simulation.NeedStates);
+        }
+
         private void Awake()
         {
             global::UtilConfig.loadConfig();
@@ -236,6 +252,8 @@ private void LogWaveDiagnostics() /*dočasná diagnostika*/
             {
                 simulation.Step();
                 accumulatedTime -= TickInterval;
+
+                Ticked?.Invoke();
 
                 if (simulation.AllNeedsSatisfied)
                     CompleteWave();

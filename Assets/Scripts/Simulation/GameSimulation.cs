@@ -9,6 +9,11 @@ namespace ResortEmpire
     {
         private readonly Dictionary<NeedType, BuildingService> buildingServices = new();
         private readonly Dictionary<NeedType, NeedStateMachine> needStates = new();
+        private readonly Dictionary<NeedType, NeedState> needStateValues = new();
+
+        // BuildingService.TotalServed counts across waves, so S2 subtracts the value at wave start.
+        private readonly Dictionary<NeedType, int> servedAtWaveStart = new();
+        private readonly Dictionary<NeedType, int> servedThisWave = new();
         private readonly int bottleneckThreshold;
 
         public int TickCount { get; private set; } = 0;
@@ -20,6 +25,10 @@ namespace ResortEmpire
             CurrentWave != null &&
             CurrentWave.Phase == WavePhase.Draining &&
             needStates.Values.All(state => state.State == NeedState.Satisfied);
+
+        // Needs of the current wave only (FR-36).
+        public IReadOnlyDictionary<NeedType, NeedState> NeedStates => needStateValues;
+        public IReadOnlyDictionary<NeedType, int> ServedThisWave => servedThisWave;
 
         public event Action<NeedType, NeedState> NeedStateChanged;
 
@@ -55,8 +64,21 @@ namespace ResortEmpire
             CurrentWave.NeedArrived += OnNeedArrived;
 
             needStates.Clear();
+            needStateValues.Clear();
+            servedAtWaveStart.Clear();
+            servedThisWave.Clear();
+
             foreach (var need in CurrentWave.TotalDemand.Keys)
-                needStates[need] = new NeedStateMachine(bottleneckThreshold);
+            {
+                var machine = new NeedStateMachine(bottleneckThreshold);
+                needStates[need] = machine;
+                needStateValues[need] = machine.State;
+
+                servedAtWaveStart[need] = buildingServices.TryGetValue(need, out var service)
+                    ? service.TotalServed
+                    : 0;
+                servedThisWave[need] = 0;
+            }
         }
 
         public NeedState GetNeedState(NeedType need)
@@ -94,7 +116,17 @@ namespace ResortEmpire
                 service.Step();
             }
 
+            UpdateServedCounts();
             UpdateNeedStates();
+        }
+
+        private void UpdateServedCounts()
+        {
+            foreach (var pair in servedAtWaveStart)
+            {
+                if (buildingServices.TryGetValue(pair.Key, out var service))
+                    servedThisWave[pair.Key] = service.TotalServed - pair.Value;
+            }
         }
 
         private void UpdateNeedStates()
@@ -120,6 +152,9 @@ namespace ResortEmpire
                     changes.Add((pair.Key, pair.Value.State));
                 }
             }
+
+            foreach (var change in changes)
+                needStateValues[change.need] = change.state;
 
             // Raised after the loop, so a handler may start the next wave;
             // the remaining changes of the finished wave are then dropped.
