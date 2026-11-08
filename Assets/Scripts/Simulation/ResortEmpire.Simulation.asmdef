@@ -1,3 +1,7 @@
 {
-	"name": "NewAssembly"
+  "name": "ResortEmpire.Simulation",
+  "rootNamespace": "ResortEmpire",
+  "references": [
+    "ResortEmpire.Utils"
+  ]
 }
