@@ -1,0 +1,936 @@
+fileFormatVersion: 2
+guid: fbcde739f23e3a449b2ae14c05590831
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2304432510905272006
+    second: Pool_0
+  - first:
+      213: -796843348095198960
+    second: Pool_1
+  - first:
+      213: 242823277626195605
+    second: Pool_2
+  - first:
+      213: -8986915602639036403
+    second: Pool_3
+  - first:
+      213: 7907104773245249678
+    second: Pool_4
+  - first:
+      213: 4063562696125723007
+    second: Pool_5
+  - first:
+      213: 6917909524501328384
+    second: Pool_6
+  - first:
+      213: 6571599884307491441
+    second: Pool_7
+  - first:
+      213: 997060428850540257
+    second: Pool_8
+  - first:
+      213: 5642279216804718375
+    second: Pool_9
+  - first:
+      213: -6801969314922160064
+    second: Pool_10
+  - first:
+      213: -8033724947661736890
+    second: Pool_11
+  - first:
+      213: 1140160523111621531
+    second: Pool_12
+  - first:
+      213: -8622182732950001072
+    second: Pool_13
+  - first:
+      213: -2216722140722945060
+    second: Pool_14
+  - first:
+      213: -1335659980620646897
+    second: Pool_15
+  - first:
+      213: 257634444764594556
+    second: Pool_16
+  - first:
+      213: 5586698512391241375
+    second: Pool_17
+  - first:
+      213: 7009736207417947695
+    second: Pool_18
+  - first:
+      213: -2418840334851734078
+    second: Pool_19
+  - first:
+      213: -5264962751994297203
+    second: Pool_20
+  - first:
+      213: 2392474738367452711
+    second: Pool_21
+  - first:
+      213: -8829955790090160458
+    second: Pool_22
+  - first:
+      213: 8175543737399717425
+    second: Pool_23
+  - first:
+      213: -115376205156898767
+    second: Pool_24
+  - first:
+      213: -2776265922246381992
+    second: Pool_25
+  - first:
+      213: 513259202137904964
+    second: Pool_26
+  - first:
+      213: 1599866793997362648
+    second: Pool_27
+  - first:
+      213: 8605639865037524107
+    second: Pool_28
+  - first:
+      213: -3957179504414529791
+    second: Pool_29
+  - first:
+      213: -4460085915877853573
+    second: Pool_30
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Pool_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1241
+        height: 1236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3931aa37d20500e0800000000000000
+      internalID: -2304432510905272006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_1
+      rect:
+        serializedVersion: 2
+        x: 721
+        y: 1209
+        width: 26
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 019172f523b01f4f0800000000000000
+      internalID: -796843348095198960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_2
+      rect:
+        serializedVersion: 2
+        x: 790
+        y: 1151
+        width: 47
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59efa160c7eae5300800000000000000
+      internalID: 242823277626195605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_3
+      rect:
+        serializedVersion: 2
+        x: 934
+        y: 1223
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d00e846cfdf084380800000000000000
+      internalID: -8986915602639036403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_4
+      rect:
+        serializedVersion: 2
+        x: 504
+        y: 1207
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e88241bc5edabbd60800000000000000
+      internalID: 7907104773245249678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_5
+      rect:
+        serializedVersion: 2
+        x: 858
+        y: 1195
+        width: 17
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f713a111ebca46830800000000000000
+      internalID: 4063562696125723007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_6
+      rect:
+        serializedVersion: 2
+        x: 1021
+        y: 1205
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00271345f0a510060800000000000000
+      internalID: 6917909524501328384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_7
+      rect:
+        serializedVersion: 2
+        x: 434
+        y: 1181
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17a6526e643033b50800000000000000
+      internalID: 6571599884307491441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_8
+      rect:
+        serializedVersion: 2
+        x: 731
+        y: 1179
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ee2c396d2546dd00800000000000000
+      internalID: 997060428850540257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_9
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 1183
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 727e639bd076d4e40800000000000000
+      internalID: 5642279216804718375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_10
+      rect:
+        serializedVersion: 2
+        x: 1023
+        y: 1163
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04025fa42fc8a91a0800000000000000
+      internalID: -6801969314922160064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_11
+      rect:
+        serializedVersion: 2
+        x: 474
+        y: 1156
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 644bd6f79b9728090800000000000000
+      internalID: -8033724947661736890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_12
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 1159
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b93edf674f9a2df00800000000000000
+      internalID: 1140160523111621531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_13
+      rect:
+        serializedVersion: 2
+        x: 770
+        y: 1164
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05a22069c7ad75880800000000000000
+      internalID: -8622182732950001072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_14
+      rect:
+        serializedVersion: 2
+        x: 1043
+        y: 1159
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd3277c25fe9c31e0800000000000000
+      internalID: -2216722140722945060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_15
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 1152
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f06b6620358c67de0800000000000000
+      internalID: -1335659980620646897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_16
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 1148
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71491a992d439300800000000000000
+      internalID: 257634444764594556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_17
+      rect:
+        serializedVersion: 2
+        x: 875
+        y: 1146
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9e784a82b0f78d40800000000000000
+      internalID: 5586698512391241375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_18
+      rect:
+        serializedVersion: 2
+        x: 902
+        y: 1140
+        width: 13
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f26375401f5974160800000000000000
+      internalID: 7009736207417947695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_19
+      rect:
+        serializedVersion: 2
+        x: 936
+        y: 1154
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c586c0f78d8e6ed0800000000000000
+      internalID: -2418840334851734078
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 923
+        width: 5
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8487b3a5481fe6b0800000000000000
+      internalID: -5264962751994297203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_21
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 152
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 726dc724917c33120800000000000000
+      internalID: 2392474738367452711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_22
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 85
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b6b545fdf1b57580800000000000000
+      internalID: -8829955790090160458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_23
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 87
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13e216996bd557170800000000000000
+      internalID: 8175543737399717425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_24
+      rect:
+        serializedVersion: 2
+        x: 930
+        y: 79
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1382714e3f9166ef0800000000000000
+      internalID: -115376205156898767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_25
+      rect:
+        serializedVersion: 2
+        x: 981
+        y: 69
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85e6b7e5ad8b879d0800000000000000
+      internalID: -2776265922246381992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_26
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 47
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 447512566867f1700800000000000000
+      internalID: 513259202137904964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_27
+      rect:
+        serializedVersion: 2
+        x: 892
+        y: 53
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d5e7286f5ed33610800000000000000
+      internalID: 1599866793997362648
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_28
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 43
+        width: 41
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8c8084dcdf5d6770800000000000000
+      internalID: 8605639865037524107
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_29
+      rect:
+        serializedVersion: 2
+        x: 1031
+        y: 45
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1076aeee4364519c0800000000000000
+      internalID: -3957179504414529791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pool_30
+      rect:
+        serializedVersion: 2
+        x: 1077
+        y: 35
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b76b0647d779a12c0800000000000000
+      internalID: -4460085915877853573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Pool_0: -2304432510905272006
+      Pool_1: -796843348095198960
+      Pool_10: -6801969314922160064
+      Pool_11: -8033724947661736890
+      Pool_12: 1140160523111621531
+      Pool_13: -8622182732950001072
+      Pool_14: -2216722140722945060
+      Pool_15: -1335659980620646897
+      Pool_16: 257634444764594556
+      Pool_17: 5586698512391241375
+      Pool_18: 7009736207417947695
+      Pool_19: -2418840334851734078
+      Pool_2: 242823277626195605
+      Pool_20: -5264962751994297203
+      Pool_21: 2392474738367452711
+      Pool_22: -8829955790090160458
+      Pool_23: 8175543737399717425
+      Pool_24: -115376205156898767
+      Pool_25: -2776265922246381992
+      Pool_26: 513259202137904964
+      Pool_27: 1599866793997362648
+      Pool_28: 8605639865037524107
+      Pool_29: -3957179504414529791
+      Pool_3: -8986915602639036403
+      Pool_30: -4460085915877853573
+      Pool_4: 7907104773245249678
+      Pool_5: 4063562696125723007
+      Pool_6: 6917909524501328384
+      Pool_7: 6571599884307491441
+      Pool_8: 997060428850540257
+      Pool_9: 5642279216804718375
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

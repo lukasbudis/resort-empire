@@ -2,6 +2,12 @@
 
 Repozitár používa GitFlow podľa metodiky predmetu, zjednodušený na dve trvalé vetvy a feature vetvy.
 
+> **Pozor: vetvy `main` a `develop` nie sú technicky chránené.** Súkromný repozitár na pláne GitHub Free ochranu vetiev nemá. GitHub ťa preto nezastaví, keď pushneš priamo do `main` alebo `develop`, zmerguješ pull request bez schválenia alebo spravíš force push. Všetky pravidlá nižšie sú dohoda tímu:
+>
+> - pred každým pushom skontroluj vetvu: `git branch --show-current`,
+> - nikdy nerob `git push --force` do `main` ani `develop`,
+> - keď sa niečo dostane do `main` alebo `develop` omylom, napíš to tímu a oprav to cez `git revert` v pull requeste, nie prepisovaním histórie.
+
 ## Vetvy
 
 | Vetva | Na čo slúži |
@@ -29,7 +35,7 @@ Do `main` ani do `develop` sa priamo nepushuje, všetko ide cez pull request.
    git push -u origin feature/SCRUM-26-tri-budovy
    ```
 5. Pull request do `develop`. Názov začína kľúčom úlohy. Pred žiadosťou o review spusti Edit Mode testy v Unity Test Runneri.
-6. Pull request schváli iný člen tímu; autor nemôže schváliť vlastný. Schvaľovatelia budú v `.github/CODEOWNERS`.
+6. Pull request zmerguj až po schválení od iného člena tímu; autor nemôže schváliť vlastný. GitHub to nevynúti, je to dohoda.
 7. Po schválení merge cez merge commit (squash a rebase sú v repozitári vypnuté), potom feature vetvu zmaž.
 
 ## Koniec šprintu

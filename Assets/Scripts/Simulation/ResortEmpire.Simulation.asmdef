@@ -1,0 +1,7 @@
+{
+  "name": "ResortEmpire.Simulation",
+  "rootNamespace": "ResortEmpire",
+  "references": [
+    "ResortEmpire.Utils"
+  ]
+}
