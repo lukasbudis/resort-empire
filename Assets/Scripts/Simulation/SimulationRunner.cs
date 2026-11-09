@@ -211,5 +211,10 @@ namespace ResortEmpire
             simulation.UpdateFastMode();
             gameCycle.UpdateFastMode();
         }
+
+        public WaveForecast GetNextWaveForecast()
+        {
+            return gameCycle?.GetNextWaveForecast();
+        }
     }
 }
