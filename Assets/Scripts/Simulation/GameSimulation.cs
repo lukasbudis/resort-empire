@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ResortEmpire
@@ -175,6 +176,27 @@ namespace ResortEmpire
         public void Resume()
         {
             IsPaused = false;
+        }
+
+        public void UpdateFastMode()
+        {
+            foreach (var (needType, service) in buildingServices)
+            {
+                string needTypeString = needType switch
+                    {
+                        NeedType.Rooms => "rooms",
+                        NeedType.Food => "food",
+                        NeedType.Drinks => "drinks",
+                        NeedType.Relax => "relax",
+                        NeedType.OceanView => "ocean_view",
+                        _ => needType.ToString().ToLower()
+                    };
+
+                service.UpdateFastMode(
+                    UtilConfig.getServiceTimeByNeedType(needTypeString),
+                    UtilConfig.GetBuildingPerformanceMultiplierByNeedType(needTypeString)
+                    );
+            }
         }
     }
 }

@@ -126,3 +126,23 @@ public class MainConfig
         return $"MainConfig:\n  {workerConfig}\n  {needStateConfig}\n  {resourceConfig}";
     }
 }
+
+[Serializable]
+public class FastModeBuildings
+{
+    public string id;
+    public float service_time;
+}
+
+[Serializable]
+public class FastModeWaveSettings
+{
+    public float wave_timer;
+}
+
+[Serializable]
+public class FastModeConfig
+{
+    public FastModeBuildings[] buildings;
+    public FastModeWaveSettings wave_settings;
+}

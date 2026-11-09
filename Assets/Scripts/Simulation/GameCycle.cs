@@ -14,7 +14,7 @@ namespace ResortEmpire
     {
         private readonly GameSimulation simulation;
         private readonly global::WavesConfig[] waves;
-        private readonly float waveTimer;
+        private float waveTimer; //Odstanene read only kvoli fastMode
         private readonly Dictionary<string, NeedType> buildingNeeds;
         private readonly HashSet<string> availableBuildingIds;
 
@@ -122,6 +122,11 @@ namespace ResortEmpire
                 case NeedType.OceanView: return needs.ocean_view;
                 default: return 0;
             }
+        }
+        
+        public void UpdateFastMode()
+        {
+            waveTimer = UtilConfig.getWaveTimer();
         }
     }
 }

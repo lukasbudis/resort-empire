@@ -64,7 +64,7 @@ namespace ResortEmpire
                 gameCycle = new GameCycle(
                     simulation,
                     config.wave_settings.waves,
-                    config.wave_settings.wave_timer,
+                    UtilConfig.getWaveTimer(),
                     buildingNeeds,
                     availableBuildingIds
                 );
@@ -113,7 +113,7 @@ namespace ResortEmpire
                     throw new InvalidOperationException($"Building '{building.id}' misses level {initialBuildingLevel}.");
 
                 float performance = global::UtilConfig.GetBuildingPerformanceMultiplier(config, building.id);
-                var service = new BuildingService(level.capacity, building.service_time, performance);
+                var service = new BuildingService(level.capacity, UtilConfig.getServiceTimeById(building.id), performance);
 
                 simulation.RegisterBuildingService(need, service);
                 buildingNeeds.Add(building.id, need);
@@ -134,11 +134,21 @@ namespace ResortEmpire
         [ContextMenu("Start Next Wave")]
         public void StartNextWave()
         {
+            if (CurrentState == GameState.AllWavesCompleted)
+                return;
+
+            if (simulation == null || CurrentState != GameState.AwaitingWave)
+                return;
+
             if (gameCycle == null) return;
 
             try
             {
                 gameCycle.StartNextWave();
+                
+                if (CurrentState != GameState.WaveInProgress)
+                    return;
+
                 accumulatedTime = 0f;
 
                 foreach (string buildingId in availableBuildingIds)
@@ -192,8 +202,14 @@ namespace ResortEmpire
             var wave = simulation.CurrentWave;
             if (wave == null) return;
 
-            int expectedTicks = Mathf.RoundToInt(config.wave_settings.wave_timer / TickInterval);
+            int expectedTicks = Mathf.RoundToInt(UtilConfig.getWaveTimer() / TickInterval);
             Debug.Log($"Wave diagnostics: state={CurrentState}, paused={simulation.IsPaused}, ticks={simulation.TickCount}, wave={ActiveWaveId}, phase={wave.Phase}, elapsed={wave.ElapsedTicks}/{expectedTicks}, allNeedsSatisfied={simulation.AllNeedsSatisfied}", this);
+        }
+
+        public void UpdateFastMode()
+        {
+            simulation.UpdateFastMode();
+            gameCycle.UpdateFastMode();
         }
     }
 }

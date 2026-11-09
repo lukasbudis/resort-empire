@@ -179,26 +179,35 @@ namespace ResortEmpire
             var availableBuildingIds = new HashSet<string>();
 
             string[] allowedBuildings = { "Reception", "Restaurant", "BeachBar" };
+            int registeredServicesCount = 0;
 
             foreach (string bId in allowedBuildings)
             {
                 global::BuildingsConfig building = global::UtilConfig.getBuildingsById(bId);
-                if (building == null) continue;
+                
+                Assert.IsNotNull(building, $"Kritická chyba: Budova '{bId}' chýba v konfigurácii config.json.");
 
                 if (Enum.TryParse(building.need, true, out NeedType need))
                 {
                     global::LevelConfig levelData = global::UtilConfig.getBuildingLevelData(bId, 1); 
-                    if (levelData == null) continue;
+                    Assert.IsNotNull(levelData, $"Kritická chyba: Pre budovu '{bId}' chýbajú dáta levelu 1.");
 
                     float performance = global::UtilConfig.GetBuildingPerformanceMultiplierById(bId);
                     
-                    var service = new BuildingService(levelData.capacity, building.service_time, performance);
+                    var service = new BuildingService(levelData.capacity, UtilConfig.getServiceTimeById(bId), performance);
 
                     simulation.RegisterBuildingService(need, service);
                     buildingNeeds.Add(bId, need);
                     availableBuildingIds.Add(bId);
+                    registeredServicesCount++;
+                }
+                else
+                {
+                    Assert.Fail($"Kritická chyba: Budova '{bId}' má v konfigurácii neznámy alebo neplatný need: '{building.need}'.");
                 }
             }
+
+            Assert.IsTrue(registeredServicesCount > 0, "Test zlyhal, pretože sa nezaregistrovala žiadna budova a simulácia by bola prázdna.");
 
             var gameCycle = new GameCycle(
                 simulation,

@@ -1,0 +1,28 @@
+{
+    "buildings": [
+        {
+            "id": "Reception",
+            "service_time": 1.2
+        },
+        {
+            "id": "Restaurant",
+            "service_time": 1.2
+        },
+        {
+            "id": "BeachBar",
+            "service_time": 1.2
+        },
+        {
+            "id": "Pool",
+            "service_time": 1.2
+        },
+        {
+            "id": "Bungalows",
+            "service_time": 1.2
+        }
+    ],
+
+    "wave_settings": {
+        "wave_timer": 9
+    }
+}

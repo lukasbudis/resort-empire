@@ -5,6 +5,8 @@ using UnityEngine;
 public static class UtilConfig
 {
     private static MainConfig data;
+    private static FastModeConfig fastModeData;
+    private static bool fastMode = false;
 
     public static void loadConfig(){
         try 
@@ -19,6 +21,21 @@ public static class UtilConfig
         catch (Exception ex)
         {
             data = null;
+            Debug.LogError($"[Config Error] Neočakávaná chyba pri načítaní/validácii: {ex.Message}");
+        }
+
+        try
+        {
+            TextAsset fastModeConfigFile = Resources.Load<TextAsset>("config_fast");
+            string content = fastModeConfigFile.text;
+
+            fastModeData = ParseFastConfig(content);
+
+            Debug.Log("JSON fast mode bol úspešne načítaný.");
+        }
+        catch (Exception ex)
+        {
+            fastModeData = null;
             Debug.LogError($"[Config Error] Neočakávaná chyba pri načítaní/validácii: {ex.Message}");
         }
     }
@@ -49,6 +66,13 @@ public static class UtilConfig
         if (config.needStateConfig == null)
             throw new ArgumentException("Configuration requires needStateConfig.");
         config.needStateConfig.Validate();
+        return config;
+    }
+    public static FastModeConfig ParseFastConfig(string content)
+    {
+        var config = JsonUtility.FromJson<FastModeConfig>(content);
+        if (config == null)
+            throw new ArgumentException("Configuration requires data.");
         return config;
     }
     public static int getCurrentEnergy()
@@ -131,6 +155,54 @@ public static class UtilConfig
         return data.buildings.Length;
     }
 
+    public static float getServiceTimeByNeedType(string need)
+    {
+        if (data == null)
+        {
+            return -1f;
+        }
+        foreach (var building in data.buildings)
+        {
+            if (building.need == need)
+            {
+                return getServiceTimeById(building.id);
+            }
+        }
+        return -1f;
+    }
+
+    public static float getServiceTimeById(string id)
+    {
+        if (data == null) // Data musia byt nacitane aj pri fastMode
+        {
+            return -1f;
+        }
+        if (fastMode)
+        {
+            if (fastModeData == null) // Nemusi byt ked neni pozadovani
+            {
+                return -1f;
+            }
+            foreach (var building in fastModeData.buildings)
+            {
+                if (id.Equals(building.id))
+                {
+                    return building.service_time;
+                }
+            }
+        } else 
+        {
+            foreach (var building in data.buildings)
+            {
+                if (id.Equals(building.id))
+                {
+                    return building.service_time;
+                }
+            }
+        } 
+        return -1f;
+    }
+
     public static int getWavesCount()
     {
         if (data == null)
@@ -166,10 +238,34 @@ public static class UtilConfig
 
     public static float getWaveTimer()
     {
-        if (data == null || data.wave_settings == null) {
+        if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
             return -1f;
         }
+        if (fastMode)
+        {
+            if (fastModeData == null)  // Nemusi byt nacitani ked sa nepozaduje FastMode
+            {
+                return -1f;
+            }
+            return fastModeData.wave_settings.wave_timer;
+        }
         return data.wave_settings.wave_timer;
+    }
+
+    public static float GetBuildingPerformanceMultiplierByNeedType(string need)
+    {
+        if (data == null)
+        {
+            return -1f;
+        }
+        foreach (var building in data.buildings)
+        {
+            if (building.need == need)
+            {
+                return GetBuildingPerformanceMultiplierById(building.id);
+            }
+        }
+        return -1f;
     }
 
     public static float GetBuildingPerformanceMultiplierById(string buildingId)
@@ -232,5 +328,14 @@ public static class UtilConfig
     public static MainConfig getConfig()
     {
     return data;
+    }
+
+    public static void setFastMode(bool newFastMode)
+    {
+        fastMode = newFastMode;
+    }
+    public static bool getFastMode()
+    {
+        return fastMode;
     }
 }

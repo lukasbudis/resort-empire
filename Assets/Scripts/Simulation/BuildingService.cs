@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ResortEmpire
 {
@@ -11,7 +12,7 @@ namespace ResortEmpire
         private readonly Queue<int> waitingUnits = new();
         private readonly int[] activeUnitIds;
         private readonly int[] remainingTicks;
-        private readonly int serviceTicks;
+        private int serviceTicks; //Odstanene read only kvoli fastMode
 
         private int nextUnitId = 1;
 
@@ -116,6 +117,22 @@ namespace ResortEmpire
 
                 ActiveCount++;
             }
+        }
+        
+        public void UpdateFastMode(float serviceSeconds, float performanceMultiplier = 1f)
+        {
+            if (float.IsNaN(serviceSeconds) ||
+                float.IsInfinity(serviceSeconds) ||
+                serviceSeconds <= 0f)
+                throw new ArgumentOutOfRangeException(nameof(serviceSeconds));
+            
+            serviceTicks = Math.Max(
+                1,
+                (int)Math.Ceiling(
+                    // Ignore float representation noise at exact tick boundaries.
+                    (double)serviceSeconds / (TickSeconds * (double)performanceMultiplier) - 1e-6
+                )
+            );
         }
 
     }
