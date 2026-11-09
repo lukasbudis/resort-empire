@@ -128,5 +128,50 @@ namespace ResortEmpire
         {
             waveTimer = UtilConfig.getWaveTimer();
         }
+        public WaveForecast GetNextWaveForecast()
+        {
+            if (CurrentState != GameState.AwaitingWave ||
+                nextWaveIndex >= waves.Length)
+            {
+                return null;
+            }
+
+            global::WavesConfig wave = waves[nextWaveIndex];
+
+            if (wave == null || wave.needs == null)
+                return null;
+
+            var availableNeeds = new HashSet<NeedType>();
+
+            foreach (string buildingId in availableBuildingIds)
+            {
+                if (buildingNeeds.TryGetValue(buildingId, out NeedType need))
+                    availableNeeds.Add(need);
+            }
+
+            NeedType[] displayOrder =
+            {
+                NeedType.Rooms,
+                NeedType.Drinks,
+                NeedType.Food,
+                NeedType.Relax,
+                NeedType.OceanView
+            };
+
+            var rows = new List<WaveForecastRow>();
+
+            foreach (NeedType need in displayOrder)
+            {
+                if (!availableNeeds.Contains(need))
+                    continue;
+
+                int volume = GetDemand(wave.needs, need);
+
+                if (volume > 0)
+                    rows.Add(new WaveForecastRow(need, volume));
+            }
+
+            return new WaveForecast(wave.wave_id, rows);
+        }
     }
 }
