@@ -30,6 +30,32 @@ namespace ResortEmpire
         
         public event Action Ticked;
 
+        // Verejna fasada pre S3 a mapu; UI nemeni konfiguraciu ani obsluhy priamo.
+        public IReadOnlyDictionary<string, string> WorkerAssignments => simulation?.WorkerAssignments;
+        public event Action<string, string, string> WorkerMoved;
+        public bool HasWorker(string buildingId) => simulation?.HasWorker(buildingId) ?? false;
+        public string GetWorkerId(string buildingId) => RequireSimulation().GetWorkerId(buildingId);
+        public string GetWorkerBuildingId(string workerId) => RequireSimulation().GetWorkerBuildingId(workerId);
+        public string GetBuildingIdForNeed(NeedType need) => simulation?.GetBuildingIdForNeed(need);
+        public bool CanMoveWorker(string fromBuildingId, string toBuildingId) =>
+            CurrentState != GameState.AllWavesCompleted &&
+            (simulation?.CanMoveWorker(fromBuildingId, toBuildingId) ?? false);
+        public bool TryMoveWorker(string fromBuildingId, string toBuildingId) =>
+            CurrentState != GameState.AllWavesCompleted &&
+            (simulation?.TryMoveWorker(fromBuildingId, toBuildingId) ?? false);
+
+        private GameSimulation RequireSimulation() =>
+            simulation ?? throw new InvalidOperationException("Simulacia nie je inicializovana.");
+
+        private void InitializeWorkers()
+        {
+            var availableNeeds = new Dictionary<string, NeedType>(StringComparer.Ordinal);
+            foreach (string buildingId in availableBuildingIds)
+                availableNeeds.Add(buildingId, buildingNeeds[buildingId]);
+            simulation.InitializeWorkers(availableNeeds, config.workers,
+                config.workerConfig.unstaffedPerformanceMultiplier);
+            simulation.WorkerMoved += (workerId, from, to) => WorkerMoved?.Invoke(workerId, from, to);
+        }
         public NeedsPanelData GetNeedsPanelData()
         {
             if (simulation?.CurrentWave == null || CurrentState != GameState.WaveInProgress)
@@ -60,6 +86,7 @@ namespace ResortEmpire
 
                 RegisterBuildingServices();
                 SetInitialAvailableBuildings();
+                InitializeWorkers();
 
                 gameCycle = new GameCycle(
                     simulation,
@@ -89,7 +116,7 @@ namespace ResortEmpire
         private bool HasRequiredConfig()
         {
             if (config == null || config.needStateConfig == null || config.buildings == null ||
-                config.workers == null || config.wave_settings == null || config.wave_settings.waves == null ||
+                config.workers == null || config.workerConfig == null || config.wave_settings == null || config.wave_settings.waves == null ||
                 config.wave_settings.waves.Length == 0)
             {
                 Debug.LogError("Konfigurácii chýbajú budovy, worker-i alebo vlny.", this);
