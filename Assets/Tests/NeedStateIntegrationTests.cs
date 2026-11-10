@@ -41,6 +41,51 @@ namespace ResortEmpire
         }
 
         [Test]
+        public void PerformanceChangeUpdatesNeedOnNextStep()
+        {
+            var food = new BuildingService(1, 1f, 0.5f);
+            var simulation = StartSingleNeedWave(NeedType.Food, food, 20, 20f, 1);
+            int ticks = 0;
+            while (simulation.GetNeedState(NeedType.Food) != NeedState.Bottleneck && ticks++ < 200)
+                simulation.Step();
+            Assert.AreEqual(NeedState.Bottleneck, simulation.GetNeedState(NeedType.Food));
+            var events = new List<NeedState>();
+            simulation.NeedStateChanged += (need, state) => events.Add(state);
+
+            food.SetPerformanceMultiplier(2f);
+            Assert.AreEqual(0.2, food.ServiceRatePerTick, 1e-12);
+            Assert.AreEqual(NeedState.Bottleneck, simulation.GetNeedState(NeedType.Food));
+            simulation.Step();
+            Assert.AreEqual(NeedState.Recovering, simulation.GetNeedState(NeedType.Food));
+            CollectionAssert.AreEqual(new[] { NeedState.Recovering }, events);
+            food.SetPerformanceMultiplier(0.5f);
+            simulation.Step();
+            Assert.AreEqual(NeedState.Bottleneck, simulation.GetNeedState(NeedType.Food));
+        }
+
+        [Test]
+        public void PausedPerformanceChangeDoesNotAdvanceService()
+        {
+            var food = new BuildingService(1, 1f, 0.5f);
+            var simulation = new GameSimulation();
+            simulation.RegisterBuildingService(NeedType.Food, food);
+            food.AddArrivals(1);
+            for (int i = 0; i < 4; i++)
+                simulation.Step(); // Hotovych 20 percent.
+            simulation.Pause();
+            food.SetPerformanceMultiplier(1f);
+            for (int i = 0; i < 100; i++)
+                simulation.Step();
+            Assert.AreEqual(4, simulation.TickCount);
+            Assert.AreEqual(0, food.TotalServed);
+            simulation.Resume();
+            for (int i = 0; i < 7; i++)
+                simulation.Step();
+            Assert.AreEqual(0, food.TotalServed);
+            simulation.Step();
+            Assert.AreEqual(1, food.TotalServed);
+        }
+        [Test]
         public void SlowBuildingGoesThroughEachStateOnce()
         {
             // 20 units in 10 s = 2/s against one seat served in 1 s = 1/s.
