@@ -56,6 +56,9 @@ namespace ResortEmpire
                 config.workerConfig.unstaffedPerformanceMultiplier);
             simulation.WorkerMoved += (workerId, from, to) => WorkerMoved?.Invoke(workerId, from, to);
         }
+        // Udaje pre hodnotenie su dostupne aj po dobehu, az do startu dalsej vlny.
+        public IReadOnlyList<UnitWaitingTime> GetWaitingTimesThisWave(NeedType need) =>
+            RequireSimulation().GetWaitingTimesThisWave(need);
         public NeedsPanelData GetNeedsPanelData()
         {
             if (simulation?.CurrentWave == null || CurrentState != GameState.WaveInProgress)

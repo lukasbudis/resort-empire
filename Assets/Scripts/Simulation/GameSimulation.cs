@@ -16,6 +16,7 @@ namespace ResortEmpire
         private readonly Dictionary<NeedType, int> servedAtWaveStart = new();
         private readonly Dictionary<NeedType, int> servedThisWave = new();
         private readonly int bottleneckThreshold;
+        private readonly Dictionary<NeedType, int> waitingTimesAtWaveStart = new();
 
         public int TickCount { get; private set; } = 0;
         public bool IsPaused { get; private set; } = false;
@@ -116,6 +117,7 @@ namespace ResortEmpire
             needStateValues.Clear();
             servedAtWaveStart.Clear();
             servedThisWave.Clear();
+            waitingTimesAtWaveStart.Clear();
 
             foreach (var need in CurrentWave.TotalDemand.Keys)
             {
@@ -127,9 +129,25 @@ namespace ResortEmpire
                     ? service.TotalServed
                     : 0;
                 servedThisWave[need] = 0;
+                waitingTimesAtWaveStart[need] = service?.WaitingTimes.Count ?? 0;
             }
         }
 
+        // Snapshot usadenych jednotiek tejto vlny pre SCRUM-131; predosle vlny sa nemiesaju.
+        public IReadOnlyList<UnitWaitingTime> GetWaitingTimesThisWave(NeedType need)
+        {
+            if (CurrentWave == null)
+                throw new InvalidOperationException("Vlna este nebola spustena.");
+            if (!waitingTimesAtWaveStart.TryGetValue(need, out int start))
+                throw new ArgumentException("Need nie je sucastou aktualnej vlny.", nameof(need));
+            if (!buildingServices.TryGetValue(need, out var service))
+                return Array.Empty<UnitWaitingTime>();
+
+            var result = new UnitWaitingTime[service.WaitingTimes.Count - start];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = service.WaitingTimes[start + i];
+            return Array.AsReadOnly(result);
+        }
         public NeedState GetNeedState(NeedType need)
         {
             if (!needStates.TryGetValue(need, out var state))
@@ -145,7 +163,7 @@ namespace ResortEmpire
 
             if (buildingServices.TryGetValue(need, out var service))
             {
-                service.AddArrivals(count);
+                service.AddArrivalsForStep(count);
             }
         }
 
