@@ -43,10 +43,58 @@ namespace ResortEmpire
             this.bottleneckThreshold = bottleneckThreshold;
         }
 
+        private WorkerAllocation workers;
+        private readonly Dictionary<string, NeedType> workerBuildingNeeds = new(StringComparer.Ordinal);
+        public IReadOnlyDictionary<string, string> WorkerAssignments => workers?.Assignments;
+        public event Action<string, string, string> WorkerMoved;
+
+        // Inicializacia prebehne raz pred prvou vlnou, iba pre dostupne budovy.
+        public void InitializeWorkers(
+            IReadOnlyDictionary<string, NeedType> buildingNeeds,
+            IEnumerable<global::WorkerInitialState> initialWorkers,
+            float unstaffedPerformanceMultiplier)
+        {
+            if (workers != null || CurrentWave != null)
+                throw new InvalidOperationException("Workerov treba inicializovat raz pred prvou vlnou.");
+            if (buildingNeeds == null) throw new ArgumentNullException(nameof(buildingNeeds));
+            var services = new Dictionary<string, BuildingService>(StringComparer.Ordinal);
+            foreach (var pair in buildingNeeds)
+            {
+                if (!buildingServices.TryGetValue(pair.Value, out var service))
+                    throw new ArgumentException("Budova nema registrovanu obsluhu.", nameof(buildingNeeds));
+                services.Add(pair.Key, service);
+            }
+            var initialized = new WorkerAllocation(services, initialWorkers, unstaffedPerformanceMultiplier);
+            foreach (var pair in buildingNeeds)
+                workerBuildingNeeds.Add(pair.Key, pair.Value);
+            workers = initialized;
+            workers.WorkerMoved += (workerId, from, to) => WorkerMoved?.Invoke(workerId, from, to);
+        }
+
+        public bool HasWorker(string buildingId) => workers?.HasWorker(buildingId) ?? false;
+        public string GetWorkerId(string buildingId) => RequireWorkers().GetWorkerId(buildingId);
+        public string GetWorkerBuildingId(string workerId) => RequireWorkers().GetWorkerBuildingId(workerId);
+        public bool CanMoveWorker(string fromBuildingId, string toBuildingId) =>
+            workers?.CanMoveWorker(fromBuildingId, toBuildingId) ?? false;
+        public bool TryMoveWorker(string fromBuildingId, string toBuildingId) =>
+            workers?.TryMoveWorker(fromBuildingId, toBuildingId) ?? false;
+
+        public string GetBuildingIdForNeed(NeedType need)
+        {
+            foreach (var pair in workerBuildingNeeds)
+                if (pair.Value == need) return pair.Key;
+            return null;
+        }
+
+        private WorkerAllocation RequireWorkers() =>
+            workers ?? throw new InvalidOperationException("Workeri nie su inicializovani.");
         public void RegisterBuildingService(NeedType need, BuildingService service)
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));
+
+            if (workers != null)
+                throw new InvalidOperationException("Po inicializacii Workerov sa obsluhy nemenia.");
 
             buildingServices[need] = service;
         }
@@ -192,9 +240,10 @@ namespace ResortEmpire
                         _ => needType.ToString().ToLower()
                     };
 
+                // Fast mode meni iba cas, nie vykon podla povodnej konfiguracie.
                 service.UpdateFastMode(
                     UtilConfig.getServiceTimeByNeedType(needTypeString),
-                    UtilConfig.GetBuildingPerformanceMultiplierByNeedType(needTypeString)
+                    service.PerformanceMultiplier
                     );
             }
         }
