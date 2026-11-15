@@ -8,12 +8,16 @@ namespace ResortEmpire
         private const float TickSeconds = 0.1f;
         private const double CompletionTolerance = 1e-12;
 
-        private readonly Queue<int> waitingUnits = new();
+        private readonly Queue<(int id, long arrivalTick)> waitingUnits = new();
+        private readonly List<UnitWaitingTime> waitingTimes = new();
         private readonly int[] activeUnitIds;
         private readonly double[] completedWork;
         private float serviceSeconds;
         private double serviceTicks;
         private int nextUnitId = 1;
+
+        public long ElapsedTicks { get; private set; }
+        public IReadOnlyList<UnitWaitingTime> WaitingTimes { get; }
 
         public int TotalArrived { get; private set; }
         public int TotalServed { get; private set; }
@@ -36,6 +40,7 @@ namespace ResortEmpire
             PerformanceMultiplier = performanceMultiplier;
             activeUnitIds = new int[capacity];
             completedWork = new double[capacity];
+            WaitingTimes = waitingTimes.AsReadOnly();
         }
 
         // Zmena vykonu zachova uz vykonanu pracu vsetkych sediacich jednotiek.
@@ -47,20 +52,26 @@ namespace ResortEmpire
             serviceTicks = newServiceTicks;
         }
 
-        public void AddArrivals(int count)
+        public void AddArrivals(int count) => AddArrivalsAtTick(count, ElapsedTicks);
+
+        // WaveModel hlasi prichody noveho kroku este pred BuildingService.Step.
+        // Prichod aj usadenie v tom istom kroku musia mat rovnaky cas, teda cakanie 0.
+        internal void AddArrivalsForStep(int count) => AddArrivalsAtTick(count, ElapsedTicks + 1);
+
+        private void AddArrivalsAtTick(int count, long arrivalTick)
         {
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
 
             for (int i = 0; i < count; i++)
-                waitingUnits.Enqueue(nextUnitId++);
+                waitingUnits.Enqueue((nextUnitId++, arrivalTick));
 
             TotalArrived += count;
-            FillFreeSlots();
+            FillFreeSlots(arrivalTick);
         }
-
         public void Step()
         {
+            ElapsedTicks++;
             for (int i = 0; i < Capacity; i++)
             {
                 if (activeUnitIds[i] == 0)
@@ -78,7 +89,7 @@ namespace ResortEmpire
             }
 
             // Novousadene jednotky zacnu postupovat az v dalsom kroku, ako doteraz.
-            FillFreeSlots();
+            FillFreeSlots(ElapsedTicks);
         }
 
         public int GetActiveUnitId(int slotIndex)
@@ -89,14 +100,17 @@ namespace ResortEmpire
             return activeUnitIds[slotIndex];
         }
 
-        private void FillFreeSlots()
+        private void FillFreeSlots(long seatedTick)
         {
             for (int i = 0; i < Capacity && waitingUnits.Count > 0; i++)
             {
                 if (activeUnitIds[i] != 0)
                     continue;
 
-                activeUnitIds[i] = waitingUnits.Dequeue();
+                var unit = waitingUnits.Dequeue();
+                activeUnitIds[i] = unit.id;
+                // Meriame iba rad: od prichodu po obsadenie miesta, nie cas obsluhy.
+                waitingTimes.Add(new UnitWaitingTime(unit.id, unit.arrivalTick, seatedTick));
                 completedWork[i] = 0;
                 ActiveCount++;
             }
