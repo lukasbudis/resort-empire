@@ -1,0 +1,56 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="worker-transfer" name="Presun workera">
+    <mxGraphModel dx="760" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="760" pageHeight="790" math="0" shadow="0" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Stavovy diagram - Presun workera" style="text;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="540" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="requirements" value="FR-11 - Bezplatny presun workera medzi budovami. FR-37 - S3 ponuka iba budovy bez workera." style="text;align=left;verticalAlign=middle;fontSize=12;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="40" y="46" width="670" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="initial" value="" style="ellipse;aspect=fixed;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="330" y="105" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="atA" value="Worker pri budove A" style="rounded=1;arcSize=25;whiteSpace=wrap;align=center;fontSize=17;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="230" y="170" width="220" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="select" value="Vyber cielovej budovy v S3" style="rounded=1;arcSize=25;whiteSpace=wrap;align=center;fontSize=17;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="230" y="370" width="220" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="atB" value="Worker pri budove B" style="rounded=1;arcSize=25;whiteSpace=wrap;align=center;fontSize=17;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="230" y="570" width="220" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="S3 ponuka iba budovy bez workera. Pocas vyberu worker zostava pri budove A." style="shape=note;size=15;whiteSpace=wrap;align=left;verticalAlign=middle;spacingLeft=14;spacingRight=12;fontSize=15;fillColor=#ffffff;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="485" y="355" width="245" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="start" edge="1" parent="1" source="initial" target="atA" style="endArrow=open;endFill=0;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="begin" value="Hrac zacne presun workera" edge="1" parent="1" source="atA" target="select" style="endArrow=open;endFill=0;strokeWidth=2;fontSize=14;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="0" as="offset" x="105" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="move" value="Hrac vyberie volnu budovu B" edge="1" parent="1" source="select" target="atB" style="endArrow=open;endFill=0;strokeWidth=2;fontSize=14;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="0" as="offset" x="105" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cancel" value="Hrac zrusi vyber" edge="1" parent="1" source="select" target="atA" style="exitX=0;exitY=0.5;entryX=0;entryY=0.5;endArrow=open;endFill=0;strokeWidth=2;fontSize=14;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="402" />
+              <mxPoint x="130" y="202" />
+            </Array>
+            <mxPoint y="0" as="offset" x="-57" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="annotation" edge="1" parent="1" source="select" target="note" style="exitX=1;exitY=0.5;entryX=0;entryY=0.5;dashed=1;endArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
