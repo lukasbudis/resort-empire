@@ -59,6 +59,10 @@ namespace ResortEmpire
         // Udaje pre hodnotenie su dostupne aj po dobehu, az do startu dalsej vlny.
         public IReadOnlyList<UnitWaitingTime> GetWaitingTimesThisWave(NeedType need) =>
             RequireSimulation().GetWaitingTimesThisWave(need);
+
+        // Zhrnutie vlny pre S4 a S5; platne po dobehu az do startu dalsej vlny.
+        public WaveSummary GetWaveSummary() => RequireSimulation().GetWaveSummary();
+
         public NeedsPanelData GetNeedsPanelData()
         {
             if (simulation?.CurrentWave == null || CurrentState != GameState.WaveInProgress)

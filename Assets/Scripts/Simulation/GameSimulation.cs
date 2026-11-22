@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -17,6 +18,8 @@ namespace ResortEmpire
         private readonly Dictionary<NeedType, int> servedThisWave = new();
         private readonly int bottleneckThreshold;
         private readonly Dictionary<NeedType, int> waitingTimesAtWaveStart = new();
+        private readonly Dictionary<NeedType, int> bottleneckTicks = new();
+        private readonly ReadOnlyDictionary<NeedType, int> bottleneckTicksView;
 
         public int TickCount { get; private set; } = 0;
         public bool IsPaused { get; private set; } = false;
@@ -32,6 +35,10 @@ namespace ResortEmpire
         public IReadOnlyDictionary<NeedType, NeedState> NeedStates => needStateValues;
         public IReadOnlyDictionary<NeedType, int> ServedThisWave => servedThisWave;
 
+        // Simulation steps each need of the current wave has spent in BOTTLENECK (FR-20).
+        // A read-only view; unlike the summary it also lists needs without demand.
+        public IReadOnlyDictionary<NeedType, int> BottleneckTicksThisWave => bottleneckTicksView;
+
         public event Action<NeedType, NeedState> NeedStateChanged;
 
         // The threshold comes from config.json (needStateConfig.bottleneckThreshold).
@@ -42,6 +49,7 @@ namespace ResortEmpire
                 throw new ArgumentOutOfRangeException(nameof(bottleneckThreshold));
 
             this.bottleneckThreshold = bottleneckThreshold;
+            bottleneckTicksView = new ReadOnlyDictionary<NeedType, int>(bottleneckTicks);
         }
 
         private WorkerAllocation workers;
@@ -118,6 +126,7 @@ namespace ResortEmpire
             servedAtWaveStart.Clear();
             servedThisWave.Clear();
             waitingTimesAtWaveStart.Clear();
+            bottleneckTicks.Clear();
 
             foreach (var need in CurrentWave.TotalDemand.Keys)
             {
@@ -130,7 +139,26 @@ namespace ResortEmpire
                     : 0;
                 servedThisWave[need] = 0;
                 waitingTimesAtWaveStart[need] = service?.WaitingTimes.Count ?? 0;
+                bottleneckTicks[need] = 0;
             }
+        }
+
+        // Summary of the current or just finished wave for S4 and S5 (FR-20, FR-25).
+        // It is a snapshot and stays valid until the next StartWave.
+        public WaveSummary GetWaveSummary()
+        {
+            if (CurrentWave == null)
+                throw new InvalidOperationException("No wave has been started yet.");
+
+            // A need without demand in this wave neither went well nor needs improvement.
+            var ticks = new Dictionary<NeedType, int>();
+            foreach (var pair in CurrentWave.TotalDemand)
+            {
+                if (pair.Value > 0)
+                    ticks[pair.Key] = bottleneckTicks[pair.Key];
+            }
+
+            return WaveSummary.FromBottleneckTicks(ticks);
         }
 
         // Snapshot usadenych jednotiek tejto vlny pre SCRUM-131; predosle vlny sa nemiesaju.
@@ -222,6 +250,14 @@ namespace ResortEmpire
 
             foreach (var change in changes)
                 needStateValues[change.need] = change.state;
+
+            // A step counts as time in BOTTLENECK when the need ends it in that state (FR-20).
+            // Counted before the events, so their handlers already see this step included.
+            foreach (var pair in needStates)
+            {
+                if (pair.Value.State == NeedState.Bottleneck)
+                    bottleneckTicks[pair.Key]++;
+            }
 
             // Raised after the loop, so a handler may start the next wave;
             // the remaining changes of the finished wave are then dropped.
