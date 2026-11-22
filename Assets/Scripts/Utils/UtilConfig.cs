@@ -325,6 +325,41 @@ public static class UtilConfig
         return data.needStateConfig.bottleneckThreshold;
     }
 
+    public static WaveRatingConfig[] getWaveRatingConfig()
+    {
+        if ( data == null)
+        {
+            return null;
+        }
+        return data.wave_settings.wave_rating;
+    }
+
+    public static WaveRatingConfig getWaveRatingConfigById(int i)
+    {
+        if (data == null || i >= data.wave_settings.wave_rating.Length || i < 0)
+        {
+            return null;
+        }
+        return data.wave_settings.wave_rating[i];
+    }
+
+    public static int getWaveRating(int score)
+    {
+        if ( data == null || score < 0 || score > 100)
+        {
+            return -1;
+        }
+
+        foreach (var wave_rating in data.wave_settings.wave_rating)
+        {
+            if (wave_rating.lower_bound <= score && score < wave_rating.upper_bound)
+            {
+                return wave_rating.rating;
+            }
+        }
+        return -1;
+    }
+
     public static MainConfig getConfig()
     {
     return data;
