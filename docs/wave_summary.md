@@ -26,7 +26,7 @@ public bool AllNeedsHadBottleneck { get; }
 | `WentWell` | needy, ktoré v BOTTLENECK neboli vôbec, v poradí zobrazenia na S2 |
 | `NeedsImprovement` | need, ktorý bol v BOTTLENECK najdlhšie; `null`, ak nebol žiadny |
 | `HadBottleneck` | `false` znamená, že vlna prebehla bez bottlenecku a S4 to má uviesť |
-| `AllNeedsHadBottleneck` | `true` znamená, že v BOTTLENECK boli všetky needy; `WentWell` vtedy obsahuje len ten, ktorý v ňom bol najkratšie |
+| `AllNeedsHadBottleneck` | `true` znamená, že v BOTTLENECK boli všetky needy; `WentWell` vtedy obsahuje len ten, ktorý v ňom bol najkratšie, a pri vlne s jediným needom je prázdny |
 
 ## Pravidlá
 
@@ -34,7 +34,8 @@ public bool AllNeedsHadBottleneck { get; }
 - Pri rovnakom čase vyhráva need, ktorý je skôr v poradí zobrazenia (Rooms, Drinks, Food, Relax, Ocean View).
 - Ten istý need nie je naraz najlepší aj najhorší. Ak má vlna jediný need a ten bol v BOTTLENECK, `WentWell` je prázdny.
 - Need s nulovým dopytom vo vlne sa v zhrnutí neuvádza.
-- Pauza čas nepridáva. Fast mode mení len trvanie obsluhy, krok ostáva 0,1 s.
+- Pauza čas nepridáva.
+- Fast mode skracuje príchod vlny aj obsluhu (`config_fast.json`), krok ostáva 0,1 s. Počty krokov z fast mode sa preto nedajú porovnávať s normálnym režimom.
 - Zhrnutie je snapshot. Čítajte ho pri `WaveCompleted`; platí až do spustenia ďalšej vlny a už získaný objekt sa potom nemení.
 - Pred prvou vlnou `GetWaveSummary()` vyvolá `InvalidOperationException`.
 
@@ -54,4 +55,4 @@ else
 }
 ```
 
-Priebežný stav počas vlny je v `GameSimulation.BottleneckTicksThisWave`. Pri udalosti `NeedStateChanged` už obsahuje aj práve skončený krok.
+Priebežný stav počas vlny je v `GameSimulation.BottleneckTicksThisWave`. Pri udalosti `NeedStateChanged` už obsahuje aj práve skončený krok. Na rozdiel od zhrnutia obsahuje aj needy s nulovým dopytom.

@@ -12,7 +12,8 @@ namespace ResortEmpire
         public IReadOnlyDictionary<NeedType, int> BottleneckTicks { get; }
 
         // Needs that were never in BOTTLENECK, in display order. When every need was in
-        // BOTTLENECK, it holds the one that spent the least time there instead.
+        // BOTTLENECK, it holds the one that spent the least time there instead; it is empty
+        // when the wave had a single need, because that need already needs improvement.
         public IReadOnlyList<NeedType> WentWell { get; }
 
         // Need that spent the most time in BOTTLENECK; null when no need was in it.
@@ -20,7 +21,7 @@ namespace ResortEmpire
 
         public bool HadBottleneck => NeedsImprovement.HasValue;
 
-        // True when WentWell names only the least affected need, not a need without a bottleneck.
+        // True when no need avoided BOTTLENECK. WentWell then names at most the least affected one.
         public bool AllNeedsHadBottleneck { get; }
 
         private WaveSummary(

@@ -137,6 +137,7 @@ namespace ResortEmpire
         {
             Assert.Throws<ArgumentNullException>(() => WaveSummary.FromBottleneckTicks(null));
             Assert.Throws<ArgumentOutOfRangeException>(() => Summary((NeedType.Food, -1)));
+            Assert.Throws<ArgumentException>(() => Summary(((NeedType)99, 0)));
         }
 
         [Test]
@@ -152,6 +153,16 @@ namespace ResortEmpire
             Assert.AreEqual(NeedType.Food, summary.NeedsImprovement);
             Assert.Throws<NotSupportedException>(
                 () => ((IDictionary<NeedType, int>)summary.BottleneckTicks)[NeedType.Food] = 1);
+        }
+
+        [Test]
+        public void Summary_WentWellCannotBeModified()
+        {
+            WaveSummary summary = Summary((NeedType.Rooms, 0), (NeedType.Food, 5));
+
+            Assert.Throws<NotSupportedException>(
+                () => ((IList<NeedType>)summary.WentWell).Add(NeedType.Food));
+            CollectionAssert.AreEqual(new[] { NeedType.Rooms }, summary.WentWell);
         }
 
         [Test]
@@ -294,6 +305,32 @@ namespace ResortEmpire
             Assert.IsTrue(restarted);
             Assert.AreEqual(0, simulation.BottleneckTicksThisWave[NeedType.Food]);
             Assert.AreEqual(NeedState.Ok, simulation.GetNeedState(NeedType.Food));
+        }
+
+        [Test]
+        public void Simulation_NextWaveForgetsNeedsOfThePreviousWave()
+        {
+            GameSimulation simulation = Simulation(
+                (NeedType.Food, Building(0.5f)), (NeedType.Rooms, Building(1f)));
+            StartWave(simulation, (NeedType.Food, Demand), (NeedType.Rooms, Demand));
+            RunToEnd(simulation);
+            Assert.Greater(simulation.BottleneckTicksThisWave[NeedType.Food], 0);
+
+            StartWave(simulation, (NeedType.Rooms, 1));
+
+            Assert.IsFalse(simulation.BottleneckTicksThisWave.ContainsKey(NeedType.Food));
+            Assert.AreEqual(1, simulation.BottleneckTicksThisWave.Count);
+        }
+
+        [Test]
+        public void Simulation_LiveCountCannotBeModifiedFromOutside()
+        {
+            GameSimulation simulation = Simulation((NeedType.Food, Building(1f)));
+            StartWave(simulation, (NeedType.Food, Demand));
+
+            Assert.Throws<NotSupportedException>(
+                () => ((IDictionary<NeedType, int>)simulation.BottleneckTicksThisWave)[NeedType.Food] = 5);
+            Assert.AreEqual(0, simulation.BottleneckTicksThisWave[NeedType.Food]);
         }
 
         [Test]

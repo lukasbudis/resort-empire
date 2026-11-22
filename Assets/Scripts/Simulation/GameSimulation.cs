@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace ResortEmpire
         private readonly int bottleneckThreshold;
         private readonly Dictionary<NeedType, int> waitingTimesAtWaveStart = new();
         private readonly Dictionary<NeedType, int> bottleneckTicks = new();
+        private readonly ReadOnlyDictionary<NeedType, int> bottleneckTicksView;
 
         public int TickCount { get; private set; } = 0;
         public bool IsPaused { get; private set; } = false;
@@ -34,7 +36,8 @@ namespace ResortEmpire
         public IReadOnlyDictionary<NeedType, int> ServedThisWave => servedThisWave;
 
         // Simulation steps each need of the current wave has spent in BOTTLENECK (FR-20).
-        public IReadOnlyDictionary<NeedType, int> BottleneckTicksThisWave => bottleneckTicks;
+        // A read-only view; unlike the summary it also lists needs without demand.
+        public IReadOnlyDictionary<NeedType, int> BottleneckTicksThisWave => bottleneckTicksView;
 
         public event Action<NeedType, NeedState> NeedStateChanged;
 
@@ -46,6 +49,7 @@ namespace ResortEmpire
                 throw new ArgumentOutOfRangeException(nameof(bottleneckThreshold));
 
             this.bottleneckThreshold = bottleneckThreshold;
+            bottleneckTicksView = new ReadOnlyDictionary<NeedType, int>(bottleneckTicks);
         }
 
         private WorkerAllocation workers;
