@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using UnityEngine;
 
 namespace ResortEmpire
 {
@@ -101,6 +102,57 @@ namespace ResortEmpire
                 wentWell.AsReadOnly(),
                 needsImprovement,
                 allNeedsHadBottleneck);
+        }
+
+        public static double CalculateUnitSatisfaction(double waitingSeconds, float lower_wait, float upper_wait, float unit_floor)
+        {
+            if (waitingSeconds <= lower_wait)
+                return 100.0;
+
+            if (waitingSeconds >= upper_wait)
+                return unit_floor;
+
+            double t = (waitingSeconds - lower_wait) / (upper_wait - lower_wait);
+            return 100.0 - t * (100.0 - unit_floor);
+        }
+
+        public static int CalculateWaveSatisfaction(IReadOnlyDictionary<NeedType, IReadOnlyList<UnitWaitingTime>> waitingTimesByNeed)
+        {
+            if (waitingTimesByNeed == null)
+                throw new ArgumentNullException(nameof(waitingTimesByNeed));
+
+            double weightedSum = 0.0;
+            double totalWeight = 0.0;
+
+            float lower_wait = UtilConfig.getPatienceGrace();
+            float upper_wait = UtilConfig.getPatienceFloorAfter();
+            float unit_floor = UtilConfig.getWaveFloor(); 
+
+            foreach (var pair in waitingTimesByNeed)
+            {
+                NeedType need = pair.Key;
+                IReadOnlyList<UnitWaitingTime> units = pair.Value;
+
+                if (units == null || units.Count == 0)
+                    continue;
+
+                double weight = need == NeedType.OceanView ? UtilConfig.getOceanViewSatisfactionWeight() : 1.0f;
+
+                foreach (UnitWaitingTime unit in units)
+                {
+                    double unitScore = CalculateUnitSatisfaction(unit.WaitingSeconds, lower_wait, upper_wait, unit_floor);
+                    weightedSum += unitScore * weight;
+                    totalWeight += weight;
+                }
+            }
+
+            if (totalWeight <= 0.0)
+                return Mathf.RoundToInt(UtilConfig.getRatingThresholds());
+
+            double average = weightedSum / totalWeight;
+            double clamped = Math.Max(UtilConfig.getRatingThresholds(), average);
+
+            return (int)Math.Round(clamped, MidpointRounding.AwayFromZero);
         }
     }
 }

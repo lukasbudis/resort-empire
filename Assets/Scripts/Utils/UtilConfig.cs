@@ -415,6 +415,65 @@ public static class UtilConfig
         return data.wave_settings.coins_per_unit;
     }
 
+    public static float getPatienceGrace()
+    {
+        if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
+            return -1f;
+        }
+        if (fastMode)
+        {
+            if (fastModeData == null)  // Nemusi byt nacitani ked sa nepozaduje FastMode
+            {
+                return -1f;
+            }
+            return fastModeData.wave_settings.patience_grace;
+        }
+        return data.wave_settings.patience_grace;
+    }
+
+    public static float getPatienceFloorAfter()
+    {
+        if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
+            return -1f;
+        }
+        if (fastMode)
+        {
+            if (fastModeData == null)  // Nemusi byt nacitani ked sa nepozaduje FastMode
+            {
+                return -1f;
+            }
+            return fastModeData.wave_settings.patience_floor_after;
+        }
+        return data.wave_settings.patience_floor_after;
+    }
+
+    public static float getWaveFloor()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.wave_floor;
+    }
+
+    public static float getRatingThresholds()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.rating_thresholds;
+    }
+
+    public static float getOceanViewSatisfactionWeight()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.ocean_view_satisfaction_weight;
+    }
+
     public static MainConfig getConfig()
     {
     return data;
