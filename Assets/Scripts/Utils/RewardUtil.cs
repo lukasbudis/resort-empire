@@ -28,4 +28,10 @@ public static class RewardUtil
         return Mathf.RoundToInt(guests * coinsPerUnit * multiplier);
     }
 
+    public static void rewardCoins(int waveId, int satisfactionScore)
+    {
+        int coins = getRewardCoins(waveId, satisfactionScore);
+        ResourceValues.addCoins(coins);
+    }
+
 }

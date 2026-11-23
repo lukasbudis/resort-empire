@@ -94,6 +94,7 @@ namespace ResortEmpire
                 RegisterBuildingServices();
                 SetInitialAvailableBuildings();
                 InitializeWorkers();
+                ResourceValues.loadFromConfig();
 
                 gameCycle = new GameCycle(
                     simulation,
@@ -104,7 +105,8 @@ namespace ResortEmpire
                 );
 
                 gameCycle.GameStateChanged += state => GameStateChanged?.Invoke(state);
-                gameCycle.WaveCompleted += waveId => WaveCompleted?.Invoke(waveId);
+                gameCycle.WaveCompleted += HandleWaveCompleted;
+                // gameCycle.WaveCompleted += waveId => WaveCompleted?.Invoke(waveId);
             }
             catch (Exception exception)
             {
@@ -163,6 +165,13 @@ namespace ResortEmpire
 
                 availableBuildingIds.Add(buildingId);
             }
+        }
+
+        private void HandleWaveCompleted(int completedWaveId)
+        {
+
+            RewardUtil.rewardCoins(completedWaveId, 100); // Este sa zmeni
+            WaveCompleted?.Invoke(completedWaveId);
         }
 
         [ContextMenu("Start Next Wave")]
