@@ -109,12 +109,14 @@ public class WaveRatingConfig
     public int lower_bound;
     public int upper_bound;
     public int rating;
+    public float coins_rating_mult;
 }
 
 [Serializable]
 public class WaveSettingsConfig
 {
     public float wave_timer;
+    public int coins_per_unit;
     public WavesConfig[] waves;
     public WaveRatingConfig[] wave_rating;
 }
