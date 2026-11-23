@@ -56,8 +56,12 @@ public class BuildingCard : MonoBehaviour
     {
         buildingId = data.BuildingId;
 
+        // An Image without a sprite draws a white square, so a missing icon is hidden.
         if (icon != null)
+        {
             icon.sprite = visual?.icon;
+            icon.enabled = icon.sprite != null;
+        }
 
         if (nameText != null)
             nameText.SetText(visual != null ? visual.title : data.BuildingId);
