@@ -198,25 +198,6 @@ namespace ResortEmpire
             Debug.Log($"S4 diagnostics: wave={completedWaveId}, satisfaction={satisfaction}, rating={rating}");
         }
 
-        private int CalculateCurrentWaveSatisfaction()
-        {
-            var timesByNeed = new Dictionary<NeedType, IReadOnlyList<UnitWaitingTime>>();
-
-            foreach (NeedType need in simulation.CurrentWave.TotalDemand.Keys)
-            {
-                timesByNeed[need] = simulation.GetWaitingTimesThisWave(need);
-                var waitingTimes = simulation.GetWaitingTimesThisWave(need);
-                string formattedTimes = waitingTimes.Count > 0 ? string.Join(", ", waitingTimes.Select(u => $"{u.WaitingSeconds:F1}s")) : "None";
-
-                Debug.Log($"[Wave {ActiveWaveId} - {need}] Units ({waitingTimes.Count}): {formattedTimes}");
-
-            }
-            int satisfaction = WaveSummary.CalculateWaveSatisfaction(timesByNeed);
-            Debug.Log($"[Wave {ActiveWaveId}] Final Satisfaction: {satisfaction}%");
-            return satisfaction;
-            // return WaveSummary.CalculateWaveSatisfaction(timesByNeed);
-        }
-
         [ContextMenu("Start Next Wave")]
         public void StartNextWave()
         {

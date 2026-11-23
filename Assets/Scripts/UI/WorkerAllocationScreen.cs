@@ -69,6 +69,7 @@ public class WorkerAllocationScreen : MonoBehaviour
             Debug.LogError("WorkerAllocationScreen nemá priradený SimulationRunner.", this);
             return;
         }
+        UpdateUnstaffedVisuals();
 
         runner.GameStateChanged += OnGameStateChanged;
         runner.WorkerMoved += OnWorkerMoved;
@@ -160,6 +161,8 @@ public class WorkerAllocationScreen : MonoBehaviour
 
     private void OnWorkerMoved(string workerId, string fromBuildingId, string toBuildingId)
     {
+        UpdateUnstaffedVisuals();
+        
         if (IsOpen)
             Render();
     }
@@ -249,5 +252,23 @@ public class WorkerAllocationScreen : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void UpdateUnstaffedVisuals()
+    {
+        if (runner == null || runner.WorkerAssignments == null)
+            return;
+
+        foreach (BuildingVisual visual in visuals)
+        {
+            if (visual == null || visual.noWorker == null)
+                continue;
+
+            // Zobrazí obrázok len pre dostupné budovy, ktoré aktuálne nemajú workera
+            bool isAvailable = runner.WorkerAssignments.ContainsKey(visual.buildingId);
+            bool hasWorker = runner.HasWorker(visual.buildingId);
+
+            visual.noWorker.SetActive(isAvailable && !hasWorker);
+        }
     }
 }
