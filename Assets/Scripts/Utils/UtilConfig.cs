@@ -236,6 +236,18 @@ public static class UtilConfig
         return null;
     }
 
+    public static int getGuestsInWave(int waveId)
+    {
+        if (data == null || data.wave_settings == null || data.wave_settings.waves == null) 
+            return -1;
+        WavesConfig wave = getWaveById(waveId);
+        if ( wave == null)
+        {
+            return -1;
+        }
+        return wave.guests;
+    }
+
     public static float getWaveTimer()
     {
         if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
@@ -323,6 +335,143 @@ public static class UtilConfig
             return -1;
         }
         return data.needStateConfig.bottleneckThreshold;
+    }
+
+    public static WaveRatingConfig[] getWaveRatingConfig()
+    {
+        if ( data == null)
+        {
+            return null;
+        }
+        return data.wave_settings.wave_rating;
+    }
+
+    public static WaveRatingConfig getWaveRatingConfigById(int i)
+    {
+        if (data == null || i >= data.wave_settings.wave_rating.Length || i < 0)
+        {
+            return null;
+        }
+        return data.wave_settings.wave_rating[i];
+    }
+
+    public static int getWaveRating(int score)
+    {
+        if ( data == null || score < 0 || score > 100)
+        {
+            return -1;
+        }
+
+        foreach (var wave_rating in data.wave_settings.wave_rating)
+        {
+            if (wave_rating.lower_bound <= score && score < wave_rating.upper_bound)
+            {
+                return wave_rating.rating;
+            }
+        }
+        return -1;
+    }
+
+    public static float getWaveMultiplier(int score)
+    {
+        if ( data == null || score < 0 || score > 100)
+        {
+            return -1;
+        }
+
+        foreach (var wave_rating in data.wave_settings.wave_rating)
+        {
+            if (wave_rating.lower_bound <= score && score < wave_rating.upper_bound)
+            {
+                return wave_rating.coins_rating_mult;
+            }
+        }
+        return -1;
+    }
+
+    public static float getWaveMultiplierByRating(int rating)
+    {
+        if ( data == null || rating < 0 || rating > 6)
+        {
+            return -1f;
+        }
+
+        foreach (var wave_rating in data.wave_settings.wave_rating)
+        {
+            if ( wave_rating.rating == rating )
+            {
+                return wave_rating.coins_rating_mult;
+            }
+        }
+        return -1f;
+    }
+
+    public static int getCoinsPerUnit()
+    {
+        if (data == null || data.wave_settings == null) {
+            return -1;
+        }
+
+        return data.wave_settings.coins_per_unit;
+    }
+
+    public static float getPatienceGrace()
+    {
+        if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
+            return -1f;
+        }
+        if (fastMode)
+        {
+            if (fastModeData == null)  // Nemusi byt nacitani ked sa nepozaduje FastMode
+            {
+                return -1f;
+            }
+            return fastModeData.wave_settings.patience_grace;
+        }
+        return data.wave_settings.patience_grace;
+    }
+
+    public static float getPatienceFloorAfter()
+    {
+        if (data == null || data.wave_settings == null) { // Data musia byt nacitane aj pri fastMode
+            return -1f;
+        }
+        if (fastMode)
+        {
+            if (fastModeData == null)  // Nemusi byt nacitani ked sa nepozaduje FastMode
+            {
+                return -1f;
+            }
+            return fastModeData.wave_settings.patience_floor_after;
+        }
+        return data.wave_settings.patience_floor_after;
+    }
+
+    public static float getWaveFloor()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.wave_floor;
+    }
+
+    public static float getRatingThresholds()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.rating_thresholds;
+    }
+
+    public static float getOceanViewSatisfactionWeight()
+    {
+        if ( data == null)
+        {
+            return -1f;
+        }
+        return data.wave_settings.ocean_view_satisfaction_weight;
     }
 
     public static MainConfig getConfig()

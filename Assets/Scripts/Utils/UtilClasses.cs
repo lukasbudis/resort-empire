@@ -104,11 +104,27 @@ public class WavesConfig
 }
 
 [Serializable]
+public class WaveRatingConfig
+{
+    public int lower_bound;
+    public int upper_bound;
+    public int rating;
+    public float coins_rating_mult;
+}
+
+[Serializable]
 public class WaveSettingsConfig
 {
     public float wave_timer;
+    public int coins_per_unit;
     public WavesConfig[] waves;
-
+    public WaveRatingConfig[] wave_rating;
+    public float patience_grace;
+    public float patience_floor_after;
+    public float wave_floor;
+    public float rating_thresholds;
+    public float ocean_view_satisfaction_weight;
+    public float unit_floor;
 }
 
 [Serializable]
@@ -138,6 +154,8 @@ public class FastModeBuildings
 public class FastModeWaveSettings
 {
     public float wave_timer;
+    public float patience_grace;
+    public float patience_floor_after;
 }
 
 [Serializable]

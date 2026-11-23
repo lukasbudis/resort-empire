@@ -23,6 +23,9 @@ public class NeedsPanel : MonoBehaviour
     [SerializeField] private TMP_Text headerText;
     [SerializeField] private string headerFormat = "WAVE {0} IN PROGRESS";
 
+    // FR-37: tapping a need opens S3 for the building that serves it.
+    [SerializeField] private WorkerAllocationScreen allocationScreen;
+
     // Exactly NeedsPanelPresenter.MaxRows slots, placed in the prefab in display order.
     [SerializeField] private NeedRow[] slots = new NeedRow[NeedsPanelPresenter.MaxRows];
     [SerializeField] private NeedVisual[] visuals =
@@ -38,6 +41,12 @@ public class NeedsPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        foreach (NeedRow slot in slots)
+        {
+            if (slot != null)
+                slot.Tapped += OnNeedTapped;
+        }
+
         if (runner == null)
         {
             Debug.LogError("NeedsPanel nemá priradený SimulationRunner.", this);
@@ -52,6 +61,12 @@ public class NeedsPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        foreach (NeedRow slot in slots)
+        {
+            if (slot != null)
+                slot.Tapped -= OnNeedTapped;
+        }
+
         if (runner == null)
             return;
 
@@ -76,6 +91,17 @@ public class NeedsPanel : MonoBehaviour
             Render();
         else
             dirty = false;
+    }
+
+    private void OnNeedTapped(NeedType need)
+    {
+        if (allocationScreen == null)
+        {
+            Debug.LogError("NeedsPanel nemá priradenú obrazovku S3.", this);
+            return;
+        }
+
+        allocationScreen.Open(need);
     }
 
     private void MarkDirty()

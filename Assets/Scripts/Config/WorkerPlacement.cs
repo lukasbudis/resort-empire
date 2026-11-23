@@ -1,10 +1,24 @@
 using System;
+using ResortEmpire;
 using UnityEngine;
 
 public class WorkerPlacement : MonoBehaviour
 {
+    [SerializeField] private SimulationRunner runner;
     [SerializeField] private BuildingWorkerPoint[] buildingPoints;
     [SerializeField] private WorkerActor[] workers;
+
+    private void OnEnable()
+    {
+        if (runner != null)
+            runner.WorkerMoved += OnWorkerMoved;
+    }
+
+    private void OnDisable()
+    {
+        if (runner != null)
+            runner.WorkerMoved -= OnWorkerMoved;
+    }
 
     public void Apply(MainConfig config)
     {
@@ -22,30 +36,39 @@ public class WorkerPlacement : MonoBehaviour
 
         foreach (WorkerInitialState workerState in config.workers)
         {
-            WorkerActor worker = Array.Find(
-                workers,
-                item => item != null && item.workerId == workerState.id);
-
-            BuildingWorkerPoint building = Array.Find(
-                buildingPoints,
-                item => item != null && item.buildingId == workerState.buildingId);
-
-            if (worker == null)
-            {
-                Debug.LogError($"Worker '{workerState.id}' sa nenašiel v scéne.", this);
-                continue;
-            }
-
-            if (building == null || building.workerPoint == null)
-            {
-                Debug.LogError(
-                    $"Miesto pre budovu '{workerState.buildingId}' sa nenašlo.",
-                    this);
-                continue;
-            }
-
-            worker.transform.position = building.workerPoint.position;
-            worker.gameObject.SetActive(true);
+            if (workerState != null)
+                PlaceWorker(workerState.id, workerState.buildingId);
         }
+    }
+
+    private void OnWorkerMoved(string workerId, string fromBuildingId, string toBuildingId)
+    {
+        PlaceWorker(workerId, toBuildingId);
+    }
+
+    private void PlaceWorker(string workerId, string buildingId)
+    {
+        WorkerActor worker = Array.Find(
+            workers,
+            item => item != null && item.workerId == workerId);
+
+        BuildingWorkerPoint building = Array.Find(
+            buildingPoints,
+            item => item != null && item.buildingId == buildingId);
+
+        if (worker == null)
+        {
+            Debug.LogError($"Worker '{workerId}' sa nenašiel v scéne.", this);
+            return;
+        }
+
+        if (building == null || building.workerPoint == null)
+        {
+            Debug.LogError($"Miesto pre budovu '{buildingId}' sa nenašlo.", this);
+            return;
+        }
+
+        worker.transform.position = building.workerPoint.position;
+        worker.gameObject.SetActive(true);
     }
 }

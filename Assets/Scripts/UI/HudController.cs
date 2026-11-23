@@ -22,7 +22,6 @@ public class HudController : MonoBehaviour
             return;
         }
 
-        coinsText.GetComponent<TMP_Text>().SetText(UtilConfig.getCoins().ToString());
         energyText.GetComponent<TMP_Text>().SetText(UtilConfig.getCurrentEnergy().ToString());
 
          if (workerPlacement == null)
@@ -38,6 +37,17 @@ public class HudController : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnEnable()
+    {
+        ResourceValues.OnCoinsChanged += UpdateCoinsDisplay;
+        UpdateCoinsDisplay(ResourceValues.getCoins());
+    }
+
+    private void OnDisable()
+    {
+        ResourceValues.OnCoinsChanged -= UpdateCoinsDisplay;
     }
 
     public void FastModeButtonOnClick()
@@ -72,5 +82,10 @@ public class HudController : MonoBehaviour
             color.selectedColor = Color.red;
             fastModeButton.GetComponent<Button>().colors = color;
         }    
+    }
+
+    private void UpdateCoinsDisplay(int newCoinsAmount)
+    {
+        coinsText.GetComponent<TMP_Text>().SetText(newCoinsAmount.ToString());
     }
 }

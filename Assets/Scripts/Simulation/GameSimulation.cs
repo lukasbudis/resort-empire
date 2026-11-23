@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 
@@ -16,6 +17,9 @@ namespace ResortEmpire
         private readonly Dictionary<NeedType, int> servedAtWaveStart = new();
         private readonly Dictionary<NeedType, int> servedThisWave = new();
         private readonly int bottleneckThreshold;
+        private readonly Dictionary<NeedType, int> waitingTimesAtWaveStart = new();
+        private readonly Dictionary<NeedType, int> bottleneckTicks = new();
+        private readonly ReadOnlyDictionary<NeedType, int> bottleneckTicksView;
 
         public int TickCount { get; private set; } = 0;
         public bool IsPaused { get; private set; } = false;
@@ -31,6 +35,10 @@ namespace ResortEmpire
         public IReadOnlyDictionary<NeedType, NeedState> NeedStates => needStateValues;
         public IReadOnlyDictionary<NeedType, int> ServedThisWave => servedThisWave;
 
+        // Simulation steps each need of the current wave has spent in BOTTLENECK (FR-20).
+        // A read-only view; unlike the summary it also lists needs without demand.
+        public IReadOnlyDictionary<NeedType, int> BottleneckTicksThisWave => bottleneckTicksView;
+
         public event Action<NeedType, NeedState> NeedStateChanged;
 
         // The threshold comes from config.json (needStateConfig.bottleneckThreshold).
@@ -41,12 +49,61 @@ namespace ResortEmpire
                 throw new ArgumentOutOfRangeException(nameof(bottleneckThreshold));
 
             this.bottleneckThreshold = bottleneckThreshold;
+            bottleneckTicksView = new ReadOnlyDictionary<NeedType, int>(bottleneckTicks);
         }
 
+        private WorkerAllocation workers;
+        private readonly Dictionary<string, NeedType> workerBuildingNeeds = new(StringComparer.Ordinal);
+        public IReadOnlyDictionary<string, string> WorkerAssignments => workers?.Assignments;
+        public event Action<string, string, string> WorkerMoved;
+
+        // Inicializacia prebehne raz pred prvou vlnou, iba pre dostupne budovy.
+        public void InitializeWorkers(
+            IReadOnlyDictionary<string, NeedType> buildingNeeds,
+            IEnumerable<global::WorkerInitialState> initialWorkers,
+            float unstaffedPerformanceMultiplier)
+        {
+            if (workers != null || CurrentWave != null)
+                throw new InvalidOperationException("Workerov treba inicializovat raz pred prvou vlnou.");
+            if (buildingNeeds == null) throw new ArgumentNullException(nameof(buildingNeeds));
+            var services = new Dictionary<string, BuildingService>(StringComparer.Ordinal);
+            foreach (var pair in buildingNeeds)
+            {
+                if (!buildingServices.TryGetValue(pair.Value, out var service))
+                    throw new ArgumentException("Budova nema registrovanu obsluhu.", nameof(buildingNeeds));
+                services.Add(pair.Key, service);
+            }
+            var initialized = new WorkerAllocation(services, initialWorkers, unstaffedPerformanceMultiplier);
+            foreach (var pair in buildingNeeds)
+                workerBuildingNeeds.Add(pair.Key, pair.Value);
+            workers = initialized;
+            workers.WorkerMoved += (workerId, from, to) => WorkerMoved?.Invoke(workerId, from, to);
+        }
+
+        public bool HasWorker(string buildingId) => workers?.HasWorker(buildingId) ?? false;
+        public string GetWorkerId(string buildingId) => RequireWorkers().GetWorkerId(buildingId);
+        public string GetWorkerBuildingId(string workerId) => RequireWorkers().GetWorkerBuildingId(workerId);
+        public bool CanMoveWorker(string fromBuildingId, string toBuildingId) =>
+            workers?.CanMoveWorker(fromBuildingId, toBuildingId) ?? false;
+        public bool TryMoveWorker(string fromBuildingId, string toBuildingId) =>
+            workers?.TryMoveWorker(fromBuildingId, toBuildingId) ?? false;
+
+        public string GetBuildingIdForNeed(NeedType need)
+        {
+            foreach (var pair in workerBuildingNeeds)
+                if (pair.Value == need) return pair.Key;
+            return null;
+        }
+
+        private WorkerAllocation RequireWorkers() =>
+            workers ?? throw new InvalidOperationException("Workeri nie su inicializovani.");
         public void RegisterBuildingService(NeedType need, BuildingService service)
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));
+
+            if (workers != null)
+                throw new InvalidOperationException("Po inicializacii Workerov sa obsluhy nemenia.");
 
             buildingServices[need] = service;
         }
@@ -68,6 +125,8 @@ namespace ResortEmpire
             needStateValues.Clear();
             servedAtWaveStart.Clear();
             servedThisWave.Clear();
+            waitingTimesAtWaveStart.Clear();
+            bottleneckTicks.Clear();
 
             foreach (var need in CurrentWave.TotalDemand.Keys)
             {
@@ -79,9 +138,44 @@ namespace ResortEmpire
                     ? service.TotalServed
                     : 0;
                 servedThisWave[need] = 0;
+                waitingTimesAtWaveStart[need] = service?.WaitingTimes.Count ?? 0;
+                bottleneckTicks[need] = 0;
             }
         }
 
+        // Summary of the current or just finished wave for S4 and S5 (FR-20, FR-25).
+        // It is a snapshot and stays valid until the next StartWave.
+        public WaveSummary GetWaveSummary()
+        {
+            if (CurrentWave == null)
+                throw new InvalidOperationException("No wave has been started yet.");
+
+            // A need without demand in this wave neither went well nor needs improvement.
+            var ticks = new Dictionary<NeedType, int>();
+            foreach (var pair in CurrentWave.TotalDemand)
+            {
+                if (pair.Value > 0)
+                    ticks[pair.Key] = bottleneckTicks[pair.Key];
+            }
+
+            return WaveSummary.FromBottleneckTicks(ticks);
+        }
+
+        // Snapshot usadenych jednotiek tejto vlny pre SCRUM-131; predosle vlny sa nemiesaju.
+        public IReadOnlyList<UnitWaitingTime> GetWaitingTimesThisWave(NeedType need)
+        {
+            if (CurrentWave == null)
+                throw new InvalidOperationException("Vlna este nebola spustena.");
+            if (!waitingTimesAtWaveStart.TryGetValue(need, out int start))
+                throw new ArgumentException("Need nie je sucastou aktualnej vlny.", nameof(need));
+            if (!buildingServices.TryGetValue(need, out var service))
+                return Array.Empty<UnitWaitingTime>();
+
+            var result = new UnitWaitingTime[service.WaitingTimes.Count - start];
+            for (int i = 0; i < result.Length; i++)
+                result[i] = service.WaitingTimes[start + i];
+            return Array.AsReadOnly(result);
+        }
         public NeedState GetNeedState(NeedType need)
         {
             if (!needStates.TryGetValue(need, out var state))
@@ -97,7 +191,7 @@ namespace ResortEmpire
 
             if (buildingServices.TryGetValue(need, out var service))
             {
-                service.AddArrivals(count);
+                service.AddArrivalsForStep(count);
             }
         }
 
@@ -157,6 +251,14 @@ namespace ResortEmpire
             foreach (var change in changes)
                 needStateValues[change.need] = change.state;
 
+            // A step counts as time in BOTTLENECK when the need ends it in that state (FR-20).
+            // Counted before the events, so their handlers already see this step included.
+            foreach (var pair in needStates)
+            {
+                if (pair.Value.State == NeedState.Bottleneck)
+                    bottleneckTicks[pair.Key]++;
+            }
+
             // Raised after the loop, so a handler may start the next wave;
             // the remaining changes of the finished wave are then dropped.
             foreach (var change in changes)
@@ -192,9 +294,10 @@ namespace ResortEmpire
                         _ => needType.ToString().ToLower()
                     };
 
+                // Fast mode meni iba cas, nie vykon podla povodnej konfiguracie.
                 service.UpdateFastMode(
                     UtilConfig.getServiceTimeByNeedType(needTypeString),
-                    UtilConfig.GetBuildingPerformanceMultiplierByNeedType(needTypeString)
+                    service.PerformanceMultiplier
                     );
             }
         }

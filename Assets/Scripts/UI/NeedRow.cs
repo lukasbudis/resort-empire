@@ -1,3 +1,4 @@
+using System;
 using ResortEmpire;
 using TMPro;
 using UnityEngine;
@@ -37,8 +38,37 @@ public class NeedRow : MonoBehaviour
     [SerializeField] private string bottleneckLabel = "BOTTLENECK";
     [SerializeField] private string recoveringLabel = "RECOVERING";
 
+    [Header("Ťuknutie otvorí S3 (FR-37)")]
+    [SerializeField] private Button tapButton;
+
+    private NeedType need;
+    private bool bound;
+
+    public event Action<NeedType> Tapped;
+
+    private void Awake()
+    {
+        if (tapButton != null)
+            tapButton.onClick.AddListener(OnTapped);
+    }
+
+    private void OnDestroy()
+    {
+        if (tapButton != null)
+            tapButton.onClick.RemoveListener(OnTapped);
+    }
+
+    private void OnTapped()
+    {
+        if (bound)
+            Tapped?.Invoke(need);
+    }
+
     public void Bind(NeedRowData data, NeedVisual visual)
     {
+        need = data.Need;
+        bound = true;
+
         Color color = GetColor(data.Status);
 
         if (icon != null)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace ResortEmpire
 {
@@ -29,6 +30,39 @@ namespace ResortEmpire
         public event Action<int> WaveCompleted;
         
         public event Action Ticked;
+
+        // Verejna fasada pre S3 a mapu; UI nemeni konfiguraciu ani obsluhy priamo.
+        public IReadOnlyDictionary<string, string> WorkerAssignments => simulation?.WorkerAssignments;
+        public event Action<string, string, string> WorkerMoved;
+        public bool HasWorker(string buildingId) => simulation?.HasWorker(buildingId) ?? false;
+        public string GetWorkerId(string buildingId) => RequireSimulation().GetWorkerId(buildingId);
+        public string GetWorkerBuildingId(string workerId) => RequireSimulation().GetWorkerBuildingId(workerId);
+        public string GetBuildingIdForNeed(NeedType need) => simulation?.GetBuildingIdForNeed(need);
+        public bool CanMoveWorker(string fromBuildingId, string toBuildingId) =>
+            CurrentState != GameState.AllWavesCompleted &&
+            (simulation?.CanMoveWorker(fromBuildingId, toBuildingId) ?? false);
+        public bool TryMoveWorker(string fromBuildingId, string toBuildingId) =>
+            CurrentState != GameState.AllWavesCompleted &&
+            (simulation?.TryMoveWorker(fromBuildingId, toBuildingId) ?? false);
+
+        private GameSimulation RequireSimulation() =>
+            simulation ?? throw new InvalidOperationException("Simulacia nie je inicializovana.");
+
+        private void InitializeWorkers()
+        {
+            var availableNeeds = new Dictionary<string, NeedType>(StringComparer.Ordinal);
+            foreach (string buildingId in availableBuildingIds)
+                availableNeeds.Add(buildingId, buildingNeeds[buildingId]);
+            simulation.InitializeWorkers(availableNeeds, config.workers,
+                config.workerConfig.unstaffedPerformanceMultiplier);
+            simulation.WorkerMoved += (workerId, from, to) => WorkerMoved?.Invoke(workerId, from, to);
+        }
+        // Udaje pre hodnotenie su dostupne aj po dobehu, az do startu dalsej vlny.
+        public IReadOnlyList<UnitWaitingTime> GetWaitingTimesThisWave(NeedType need) =>
+            RequireSimulation().GetWaitingTimesThisWave(need);
+
+        // Zhrnutie vlny pre S4 a S5; platne po dobehu az do startu dalsej vlny.
+        public WaveSummary GetWaveSummary() => RequireSimulation().GetWaveSummary();
 
         public NeedsPanelData GetNeedsPanelData()
         {
@@ -60,6 +94,8 @@ namespace ResortEmpire
 
                 RegisterBuildingServices();
                 SetInitialAvailableBuildings();
+                InitializeWorkers();
+                ResourceValues.loadFromConfig();
 
                 gameCycle = new GameCycle(
                     simulation,
@@ -70,7 +106,8 @@ namespace ResortEmpire
                 );
 
                 gameCycle.GameStateChanged += state => GameStateChanged?.Invoke(state);
-                gameCycle.WaveCompleted += waveId => WaveCompleted?.Invoke(waveId);
+                gameCycle.WaveCompleted += HandleWaveCompleted;
+                // gameCycle.WaveCompleted += waveId => WaveCompleted?.Invoke(waveId);
             }
             catch (Exception exception)
             {
@@ -89,7 +126,7 @@ namespace ResortEmpire
         private bool HasRequiredConfig()
         {
             if (config == null || config.needStateConfig == null || config.buildings == null ||
-                config.workers == null || config.wave_settings == null || config.wave_settings.waves == null ||
+                config.workers == null || config.workerConfig == null || config.wave_settings == null || config.wave_settings.waves == null ||
                 config.wave_settings.waves.Length == 0)
             {
                 Debug.LogError("Konfigurácii chýbajú budovy, worker-i alebo vlny.", this);
@@ -129,6 +166,36 @@ namespace ResortEmpire
 
                 availableBuildingIds.Add(buildingId);
             }
+        }
+
+        private void HandleWaveCompleted(int completedWaveId)
+        {
+            int satisfaction = WaveSatisfactionCalculator.CalculatePercent(
+                simulation,
+                config.wave_settings);
+
+            int rating = UtilConfig.getWaveRating(satisfaction);
+
+            int servedUnits = 0;
+            foreach (int count in simulation.ServedThisWave.Values)
+                servedUnits += count;
+
+            int totalUnits = 0;
+            foreach (int count in simulation.CurrentWave.TotalDemand.Values)
+                totalUnits += count;
+
+            LastWaveResult = new WaveCompleteResult(
+                completedWaveId,
+                satisfaction,
+                rating,
+                servedUnits,
+                totalUnits,
+                RewardUtil.getRewardCoins(completedWaveId, satisfaction),
+                simulation.GetWaveSummary());
+
+            waveRewardClaimed = false;
+            WaveCompleted?.Invoke(completedWaveId);
+            Debug.Log($"S4 diagnostics: wave={completedWaveId}, satisfaction={satisfaction}, rating={rating}");
         }
 
         [ContextMenu("Start Next Wave")]
@@ -215,6 +282,19 @@ namespace ResortEmpire
         public WaveForecast GetNextWaveForecast()
         {
             return gameCycle?.GetNextWaveForecast();
+        }
+        public WaveCompleteResult LastWaveResult { get; private set; }
+
+        private bool waveRewardClaimed;
+
+        public bool ClaimWaveRewards()
+        {
+            if (LastWaveResult == null || waveRewardClaimed)
+                return false;
+
+            waveRewardClaimed = true;
+            ResourceValues.addCoins(LastWaveResult.CoinsReward);
+            return true;
         }
     }
 }

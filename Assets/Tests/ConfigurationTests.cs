@@ -137,5 +137,51 @@ namespace ResortEmpire
                 Assert.GreaterOrEqual(checkedOceanView, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'ocean_view'!");
             }
         }
+
+        [Test]
+        public void GetWaveRating()
+        {
+            UtilConfig.loadConfig();
+
+            int score = 40;
+            int actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(1, actualRating);
+
+            score = 54;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(1, actualRating);
+
+            score = 55;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(2, actualRating);
+
+            score = 69;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(2, actualRating);
+
+            score = 70;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(3, actualRating);
+
+            score = 79;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(3, actualRating);
+
+            score = 80;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(4, actualRating);
+
+            score = 89;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(4, actualRating);
+
+            score = 90;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(5, actualRating);
+
+            score = 100;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(6, actualRating);
+        }
     }
 }
