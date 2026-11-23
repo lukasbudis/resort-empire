@@ -137,5 +137,64 @@ namespace ResortEmpire
                 Assert.GreaterOrEqual(checkedOceanView, 0, $"Vlna ID {wave.wave_id} má záporný objem pre 'ocean_view'!");
             }
         }
+
+        [Test]
+        public void GetWaveRating()
+        {
+            UtilConfig.loadConfig();
+
+            int score = 0;
+            int actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(1, actualRating);
+
+            score = 39;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(1, actualRating);
+
+            // Rating 2 (40 - 54)
+            score = 40;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(2, actualRating);
+
+            score = 54;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(2, actualRating);
+
+            // Rating 3 (55 - 69)
+            score = 55;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(3, actualRating);
+
+            score = 69;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(3, actualRating);
+
+            // Rating 4 (70 - 79)
+            score = 70;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(4, actualRating);
+
+            score = 79;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(4, actualRating);
+
+            // Rating 5 (80 - 89)
+            score = 80;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(5, actualRating);
+
+            score = 89;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(5, actualRating);
+
+            // Rating 6 (90 - 100)
+            score = 90;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(6, actualRating);
+
+            score = 100;
+            actualRating = UtilConfig.getWaveRating(score);
+            Assert.AreEqual(6, actualRating);
+        }
     }
 }

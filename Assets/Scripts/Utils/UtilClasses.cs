@@ -104,11 +104,19 @@ public class WavesConfig
 }
 
 [Serializable]
+public class WaveRatingConfig
+{
+    public int lower_bound;
+    public int upper_bound;
+    public int rating;
+}
+
+[Serializable]
 public class WaveSettingsConfig
 {
     public float wave_timer;
     public WavesConfig[] waves;
-
+    public WaveRatingConfig[] wave_rating;
 }
 
 [Serializable]
