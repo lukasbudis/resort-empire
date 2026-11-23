@@ -170,9 +170,32 @@ namespace ResortEmpire
 
         private void HandleWaveCompleted(int completedWaveId)
         {
-            int satisfaction = CalculateCurrentWaveSatisfaction();
-            RewardUtil.rewardCoins(completedWaveId, satisfaction);
+            int satisfaction = WaveSatisfactionCalculator.CalculatePercent(
+                simulation,
+                config.wave_settings);
+
+            int rating = UtilConfig.getWaveRating(satisfaction);
+
+            int servedUnits = 0;
+            foreach (int count in simulation.ServedThisWave.Values)
+                servedUnits += count;
+
+            int totalUnits = 0;
+            foreach (int count in simulation.CurrentWave.TotalDemand.Values)
+                totalUnits += count;
+
+            LastWaveResult = new WaveCompleteResult(
+                completedWaveId,
+                satisfaction,
+                rating,
+                servedUnits,
+                totalUnits,
+                RewardUtil.getRewardCoins(completedWaveId, satisfaction),
+                simulation.GetWaveSummary());
+
+            waveRewardClaimed = false;
             WaveCompleted?.Invoke(completedWaveId);
+            Debug.Log($"S4 diagnostics: wave={completedWaveId}, satisfaction={satisfaction}, rating={rating}");
         }
 
         private int CalculateCurrentWaveSatisfaction()
@@ -278,6 +301,19 @@ namespace ResortEmpire
         public WaveForecast GetNextWaveForecast()
         {
             return gameCycle?.GetNextWaveForecast();
+        }
+        public WaveCompleteResult LastWaveResult { get; private set; }
+
+        private bool waveRewardClaimed;
+
+        public bool ClaimWaveRewards()
+        {
+            if (LastWaveResult == null || waveRewardClaimed)
+                return false;
+
+            waveRewardClaimed = true;
+            ResourceValues.addCoins(LastWaveResult.CoinsReward);
+            return true;
         }
     }
 }

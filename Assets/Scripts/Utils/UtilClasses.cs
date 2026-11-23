@@ -124,6 +124,7 @@ public class WaveSettingsConfig
     public float wave_floor;
     public float rating_thresholds;
     public float ocean_view_satisfaction_weight;
+    public float unit_floor;
 }
 
 [Serializable]
