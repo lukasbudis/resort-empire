@@ -23,6 +23,8 @@
     ],
 
     "wave_settings": {
-        "wave_timer": 9
+        "wave_timer": 9,
+        "patience_grace": 1.0,
+        "patience_floor_after": 3.0
     }
 }

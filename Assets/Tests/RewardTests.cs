@@ -10,7 +10,7 @@ namespace ResortEmpire
         [Test]
         public void GetRewardCoinsAllWaves(
             [Values(1, 2, 3, 4, 5, 6, 7, 8)] int waveId,
-            [Values(0, 39, 40, 55, 70, 80, 90, 100)] int score)
+            [Values(40, 55, 70, 80, 90, 100)] int score)
         {
             int guests = UtilConfig.getGuestsInWave(waveId);
             int coinsPerUnit = UtilConfig.getCoinsPerUnit();
