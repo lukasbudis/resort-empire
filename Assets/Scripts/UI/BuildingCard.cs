@@ -10,6 +10,7 @@ public class BuildingVisual
     public string buildingId;
     public string title;
     public Sprite icon;
+    public GameObject noWorker;
 }
 
 // One building card in S3. Only displays BuildingCardData, all decisions are in WorkerAllocationPresenter.
