@@ -51,6 +51,16 @@ namespace ResortEmpire
         public bool TryAddPurchasedBuilding(string buildingId) =>
             gameCycle?.TryAddPurchasedBuilding(buildingId) ?? false;
 
+        public bool TryGetBuildingSeats(string buildingId, out int level, out int capacity)
+        {
+            level = capacity = 0;
+            return gameCycle != null && gameCycle.TryGetBuildingSeats(buildingId, out level, out capacity);
+        }
+
+        // Simulacna cast vylepsenia. Ekonomiku nakupu riesi volajuci.
+        public bool TryIncreaseBuildingCapacity(string buildingId) =>
+            gameCycle?.TryIncreaseBuildingCapacity(buildingId) ?? false;
+
         private void InitializeWorkers()
         {
             var availableNeeds = new Dictionary<string, NeedType>(StringComparer.Ordinal);
@@ -148,12 +158,9 @@ namespace ResortEmpire
                 if (!TryParseNeed(building.need, out NeedType need))
                     throw new InvalidOperationException($"Unknown need '{building.need}' on building '{building.id}'.");
 
-                global::LevelConfig level = Array.Find(building.levels, item => item != null && item.level == initialBuildingLevel);
-                if (level == null)
-                    throw new InvalidOperationException($"Building '{building.id}' misses level {initialBuildingLevel}.");
-
                 float performance = global::UtilConfig.GetBuildingPerformanceMultiplier(config, building.id);
-                var service = new BuildingService(level.capacity, UtilConfig.getServiceTimeById(building.id), performance);
+                var service = new BuildingService(building.levels, initialBuildingLevel,
+                    UtilConfig.getServiceTimeById(building.id), performance);
 
                 simulation.RegisterBuildingService(need, service);
                 buildingNeeds.Add(building.id, need);

@@ -10,8 +10,9 @@ namespace ResortEmpire
 
         private readonly Queue<(int id, long arrivalTick)> waitingUnits = new();
         private readonly List<UnitWaitingTime> waitingTimes = new();
-        private readonly int[] activeUnitIds;
-        private readonly double[] completedWork;
+        private int[] activeUnitIds;
+        private double[] completedWork;
+        private readonly LevelConfig[] levels;
         private float serviceSeconds;
         private double serviceTicks;
         private int nextUnitId = 1;
@@ -22,6 +23,7 @@ namespace ResortEmpire
         public int TotalArrived { get; private set; }
         public int TotalServed { get; private set; }
         public int Capacity => activeUnitIds.Length;
+        public int Level { get; private set; } = 1;
         public int WaitingCount => waitingUnits.Count;
         public int ActiveCount { get; private set; }
         public bool IsEmpty => WaitingCount == 0 && ActiveCount == 0;
@@ -41,6 +43,34 @@ namespace ResortEmpire
             activeUnitIds = new int[capacity];
             completedWork = new double[capacity];
             WaitingTimes = waitingTimes.AsReadOnly();
+        }
+
+        public BuildingService(LevelConfig[] levels, int initialLevel, float serviceSeconds, float performanceMultiplier = 1f)
+            : this(FindLevel(levels, initialLevel)?.capacity
+                ?? throw new ArgumentException($"Missing building level {initialLevel}.", nameof(levels)),
+                serviceSeconds, performanceMultiplier)
+        {
+            this.levels = levels;
+            Level = initialLevel;
+        }
+
+        private static LevelConfig FindLevel(LevelConfig[] levels, int level) =>
+            levels == null ? null : Array.Find(levels, item => item != null && item.level == level);
+
+        internal bool TryIncreaseCapacity()
+        {
+            if (Level >= 3)
+                return false;
+
+            var next = FindLevel(levels, Level + 1);
+            if (next == null || next.capacity <= Capacity)
+                return false;
+
+            Array.Resize(ref activeUnitIds, next.capacity);
+            Array.Resize(ref completedWork, next.capacity);
+            Level = next.level;
+            FillFreeSlots(ElapsedTicks);
+            return true;
         }
 
         // Zmena vykonu zachova uz vykonanu pracu vsetkych sediacich jednotiek.

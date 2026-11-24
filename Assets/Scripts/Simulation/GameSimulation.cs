@@ -118,6 +118,9 @@ namespace ResortEmpire
             buildingServices[need] = service;
         }
 
+        internal bool TryGetBuildingService(NeedType need, out BuildingService service) =>
+            buildingServices.TryGetValue(need, out service);
+
         public void StartWave(
             Dictionary<NeedType, int> demand,
             IEnumerable<NeedType> availableNeeds,
