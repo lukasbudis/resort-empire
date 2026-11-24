@@ -41,6 +41,27 @@ namespace ResortEmpire
             this.availableBuildingIds = availableBuildingIds ?? throw new ArgumentNullException(nameof(availableBuildingIds));
         }
 
+        private bool TryGetAvailableService(string buildingId, out BuildingService service)
+        {
+            service = null;
+            return buildingId != null && availableBuildingIds.Contains(buildingId)
+                && buildingNeeds.TryGetValue(buildingId, out var need)
+                && simulation.TryGetBuildingService(need, out service);
+        }
+
+        public bool TryGetBuildingSeats(string buildingId, out int level, out int capacity)
+        {
+            bool found = TryGetAvailableService(buildingId, out var service);
+            level = service?.Level ?? 0;
+            capacity = service?.Capacity ?? 0;
+            return found;
+        }
+
+        public bool TryIncreaseBuildingCapacity(string buildingId) =>
+            CurrentState == GameState.AwaitingWave
+            && TryGetAvailableService(buildingId, out var service)
+            && service.TryIncreaseCapacity();
+
         public void StartNextWave()
         {
             if (CurrentState != GameState.AwaitingWave)
