@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Presun workera" id="activity-worker-transfer">
+    <mxGraphModel page="1" pageScale="1" pageWidth="1000" pageHeight="955" grid="1" gridSize="10" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" vertex="1" value="Diagram aktivit - Presun workera" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=21;text;strokeColor=none;fillColor=none;align=left;fontStyle=1;">
+          <mxGeometry as="geometry" x="26" y="12" width="870" height="30" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" vertex="1" value="Worker zacina pri budove A.  |  FR-11, FR-15, FR-37" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=14;text;strokeColor=none;fillColor=none;align=left;">
+          <mxGeometry as="geometry" x="26" y="44" width="900" height="24" />
+        </mxCell>
+        <mxCell id="frame" parent="1" vertex="1" value="act Presunut workera" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=14;shape=umlFrame;width=177;height=24;boundedLbl=1;align=left;spacingLeft=5;fillColor=none;">
+          <mxGeometry as="geometry" x="20" y="83" width="960" height="850" />
+        </mxCell>
+        <mxCell id="hrac" parent="1" vertex="1" value="Hrac" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=16;swimlane;horizontal=1;startSize=30;fontStyle=1;collapsible=0;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="30" y="117" width="340" height="806" />
+        </mxCell>
+        <mxCell id="hra" parent="1" vertex="1" value="Hra" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=16;swimlane;horizontal=1;startSize=30;fontStyle=1;collapsible=0;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="370" y="117" width="600" height="806" />
+        </mxCell>
+        <mxCell id="start" parent="hrac" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;ellipse;fillColor=#000000;">
+          <mxGeometry as="geometry" x="162" y="50" width="20" height="20" />
+        </mxCell>
+        <mxCell id="open" parent="hrac" vertex="1" value="Vybrat cielovu budovu B&#10;a otvorit jej detail S3" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="40" y="93" width="264" height="52" />
+        </mxCell>
+        <mxCell id="merge" parent="hra" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rhombus;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="53" y="105" width="28" height="28" />
+        </mxCell>
+        <mxCell id="check" parent="hra" vertex="1" value="Zistit, ci ma budova B workera" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="130" y="93" width="300" height="52" />
+        </mxCell>
+        <mxCell id="occupied" parent="hra" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rhombus;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="262" y="170" width="36" height="36" />
+        </mxCell>
+        <mxCell id="offer" parent="hra" vertex="1" value="Ponuknut presun z budov,&#10;ktore maju workera" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="24" y="229" width="246" height="62" />
+        </mxCell>
+        <mxCell id="info" parent="hra" vertex="1" value="Zobrazit, ze B uz ma workera.&#10;Presun neponuknut." style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="317" y="229" width="229" height="62" />
+        </mxCell>
+        <mxCell id="endInfo" parent="hra" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;shape=endState;fillColor=#000000;">
+          <mxGeometry as="geometry" x="418.5" y="320" width="26" height="26" />
+        </mxCell>
+        <mxCell id="choice" parent="hrac" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rhombus;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="154" y="242" width="36" height="36" />
+        </mxCell>
+        <mxCell id="cancel" parent="hrac" vertex="1" value="Zrusit vyber&#10;a zavriet S3" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="16" y="364" width="129" height="58" />
+        </mxCell>
+        <mxCell id="pick" parent="hrac" vertex="1" value="Vybrat workera&#10;z budovy A" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="175" y="364" width="148" height="58" />
+        </mxCell>
+        <mxCell id="endCancel" parent="hrac" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;shape=endState;fillColor=#000000;">
+          <mxGeometry as="geometry" x="67.5" y="458" width="26" height="26" />
+        </mxCell>
+        <mxCell id="postCancel" parent="hrac" vertex="1" value="Worker zostava pri A." style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=13;text;strokeColor=none;fillColor=none;align=left;">
+          <mxGeometry as="geometry" x="11" y="496" width="180" height="25" />
+        </mxCell>
+        <mxCell id="eligible" parent="hra" vertex="1" value="Je presun z A do B&#10;stale mozny?" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=14;rhombus;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="44" y="347" width="254" height="92" />
+        </mxCell>
+        <mxCell id="retry" parent="hra" vertex="1" value="Obnovit ponuku S3" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="382" y="367" width="165" height="52" />
+        </mxCell>
+        <mxCell id="move" parent="hra" vertex="1" value="Bezplatne presunut workera&#10;z budovy A do budovy B" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="35" y="484" width="272" height="58" />
+        </mxCell>
+        <mxCell id="speed" parent="hra" vertex="1" value="Ihned upravit rychlost obsluhy v A aj B,&#10;aj pre uz sediacich hosti" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="14" y="578" width="314" height="62" />
+        </mxCell>
+        <mxCell id="refresh" parent="hra" vertex="1" value="Zobrazit A bez workera a B s workerom.&#10;Zavriet S3." style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;rounded=1;arcSize=40;fillColor=#ffffff;">
+          <mxGeometry as="geometry" x="14" y="670" width="314" height="62" />
+        </mxCell>
+        <mxCell id="endMove" parent="hra" vertex="1" value="" style="whiteSpace=wrap;html=0;fontFamily=Arial;fontColor=#000000;strokeColor=#000000;strokeWidth=1.4;fontSize=15;shape=endState;fillColor=#000000;">
+          <mxGeometry as="geometry" x="158" y="756" width="26" height="26" />
+        </mxCell>
+        <mxCell id="edge-start-open" parent="1" edge="1" source="start" target="open" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-open-merge" parent="1" edge="1" source="open" target="merge" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-merge-check" parent="1" edge="1" source="merge" target="check" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-check-occupied" parent="1" edge="1" source="check" target="occupied" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-occupied-offer" parent="1" edge="1" source="occupied" target="offer" value="[B je bez workera]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0;exitY=0.5;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="517" y="305" />
+            </Array>
+            <mxPoint as="offset" x="16.0" y="-15.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-occupied-info" parent="1" edge="1" source="occupied" target="info" value="[B ma workera]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="801.5" y="305" />
+            </Array>
+            <mxPoint as="offset" x="-13.25" y="-15.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-info-endInfo" parent="1" edge="1" source="info" target="endInfo" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-offer-choice" parent="1" edge="1" source="offer" target="choice" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0;exitY=0.5;entryX=1;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-choice-cancel" parent="1" edge="1" source="choice" target="cancel" value="[zrusit]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0;exitY=0.5;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="110.5" y="377" />
+            </Array>
+            <mxPoint as="offset" x="32.5" y="-31.25" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-choice-pick" parent="1" edge="1" source="choice" target="pick" value="[presunut]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="202" y="424" />
+              <mxPoint x="279" y="424" />
+            </Array>
+            <mxPoint as="offset" x="-2.5" y="-13.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-cancel-endCancel" parent="1" edge="1" source="cancel" target="endCancel" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-pick-eligible" parent="1" edge="1" source="pick" target="eligible" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-eligible-move" parent="1" edge="1" source="eligible" target="move" value="[ano]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <mxPoint as="offset" x="26.0" y="-1.5" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-eligible-retry" parent="1" edge="1" source="eligible" target="retry" value="[nie]" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0;entryY=0.5;">
+          <mxGeometry as="geometry" relative="1">
+            <mxPoint as="offset" x="0.0" y="-14.0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-retry-merge" parent="1" edge="1" source="retry" target="merge" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=1;exitY=0.5;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1">
+            <Array as="points">
+              <mxPoint x="947" y="510" />
+              <mxPoint x="947" y="178" />
+              <mxPoint x="437" y="178" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge-move-speed" parent="1" edge="1" source="move" target="speed" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-speed-refresh" parent="1" edge="1" source="speed" target="refresh" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="edge-refresh-endMove" parent="1" edge="1" source="refresh" target="endMove" value="" style="endArrow=open;endFill=0;endSize=8;rounded=0;strokeColor=#000000;strokeWidth=1.4;fontColor=#000000;fontSize=13;fontFamily=Arial;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
