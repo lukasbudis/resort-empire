@@ -2,9 +2,8 @@ using ResortEmpire;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// Building on the map in S1: a tap opens S3 for it before the wave (FR-35).
+// Map entry point: building actions before a wave, staff allocation during a wave.
 // Needs a Collider2D on this object and a Physics 2D Raycaster on the camera.
-// During the wave S3 is opened from S2, so the map does not react then.
 [RequireComponent(typeof(Collider2D))]
 public class BuildingTapTarget : MonoBehaviour, IPointerClickHandler
 {
@@ -20,9 +19,17 @@ public class BuildingTapTarget : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        if (runner.CurrentState != GameState.AwaitingWave || allocationScreen.IsOpen)
+        if (allocationScreen.IsOpen)
             return;
 
-        allocationScreen.Open(buildingId);
+        switch (runner.CurrentState)
+        {
+            case GameState.AwaitingWave:
+                allocationScreen.OpenBuildingActions(buildingId);
+                break;
+            case GameState.WaveInProgress:
+                allocationScreen.Open(buildingId);
+                break;
+        }
     }
 }

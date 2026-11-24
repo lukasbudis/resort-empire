@@ -5,14 +5,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// S3 Worker Allocation. Opens for a target building: from S2 by tapping a need (FR-37),
-// before the wave by tapping a building on the map. The player picks the building that is left empty.
-// S3 is an overlay on top of S1/S2, so closing it returns where it was opened from (FR-35).
-// This component sits on an always active object; only `content` is shown or hidden.
+// The S1 action menu and S3 share a canvas and one selected building.
+// S2 and in-wave map taps open S3 directly. Closing either overlay reveals S1/S2.
 public class WorkerAllocationScreen : MonoBehaviour
 {
     [SerializeField] private SimulationRunner runner;
     [SerializeField] private GameObject content;
+
+    [Header("S1 building actions")]
+    [SerializeField] private GameObject buildingActions;
+    [SerializeField] private TMP_Text buildingActionsTitle;
+    [SerializeField] private Button assignStaffButton;
+    [SerializeField] private Button cancelActionsButton;
 
     [Header("Hlavička")]
     [SerializeField] private TMP_Text titleText;
@@ -46,12 +50,16 @@ public class WorkerAllocationScreen : MonoBehaviour
 
     private void Awake()
     {
-        if (content != null)
-            content.SetActive(false);
+        Close();
     }
 
     private void OnEnable()
     {
+        if (assignStaffButton != null)
+            assignStaffButton.onClick.AddListener(OpenStaffForSelection);
+        if (cancelActionsButton != null)
+            cancelActionsButton.onClick.AddListener(Close);
+
         if (closeButton != null)
             closeButton.onClick.AddListener(Close);
 
@@ -77,6 +85,12 @@ public class WorkerAllocationScreen : MonoBehaviour
 
     private void OnDisable()
     {
+        Close();
+        if (assignStaffButton != null)
+            assignStaffButton.onClick.RemoveListener(OpenStaffForSelection);
+        if (cancelActionsButton != null)
+            cancelActionsButton.onClick.RemoveListener(Close);
+
         if (closeButton != null)
             closeButton.onClick.RemoveListener(Close);
 
@@ -119,28 +133,59 @@ public class WorkerAllocationScreen : MonoBehaviour
     // From the map, or from code. A locked or unknown building does not open S3.
     public void Open(string buildingId)
     {
+        if (!SelectAvailableBuilding(buildingId))
+            return;
+
+        if (buildingActions != null)
+            buildingActions.SetActive(false);
+        if (content != null)
+            content.SetActive(true);
+        Render();
+    }
+
+    public void OpenBuildingActions(string buildingId)
+    {
+        if (runner == null || runner.CurrentState != GameState.AwaitingWave)
+            return;
+
+        // Older prefabs without the S1 menu still provide access to S3.
+        if (buildingActions == null)
+        {
+            Open(buildingId);
+            return;
+        }
+        if (!SelectAvailableBuilding(buildingId))
+            return;
+
+        if (content != null)
+            content.SetActive(false);
+        if (buildingActionsTitle != null)
+            buildingActionsTitle.SetText(GetTitle(buildingId));
+        buildingActions.SetActive(true);
+    }
+
+    private void OpenStaffForSelection() => Open(targetBuildingId);
+
+    private bool SelectAvailableBuilding(string buildingId)
+    {
         if (runner == null || runner.WorkerAssignments == null)
         {
             Debug.LogError("Simulácia nie je pripravená, S3 sa neotvorí.", this);
-            return;
+            return false;
         }
 
         if (runner.CurrentState == GameState.AllWavesCompleted)
-            return;
+            return false;
 
         if (buildingId == null || !runner.WorkerAssignments.ContainsKey(buildingId))
         {
             Debug.Log($"Budova '{buildingId}' nie je dostupná, S3 sa neotvorí.");
-            return;
+            return false;
         }
 
         targetBuildingId = buildingId;
         openedInState = runner.CurrentState;
-
-        if (content != null)
-            content.SetActive(true);
-
-        Render();
+        return true;
     }
 
     // Back to S1 or S2: S3 only hides itself, the screen under it stays as it was (FR-35).
@@ -148,6 +193,8 @@ public class WorkerAllocationScreen : MonoBehaviour
     {
         targetBuildingId = null;
 
+        if (buildingActions != null)
+            buildingActions.SetActive(false);
         if (content != null)
             content.SetActive(false);
     }
@@ -163,7 +210,7 @@ public class WorkerAllocationScreen : MonoBehaviour
     {
         UpdateUnstaffedVisuals();
         
-        if (IsOpen)
+        if (IsOpen && content != null && content.activeSelf)
             Render();
     }
 
