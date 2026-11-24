@@ -48,6 +48,9 @@ namespace ResortEmpire
         private GameSimulation RequireSimulation() =>
             simulation ?? throw new InvalidOperationException("Simulacia nie je inicializovana.");
 
+        public bool TryAddPurchasedBuilding(string buildingId) =>
+            gameCycle?.TryAddPurchasedBuilding(buildingId) ?? false;
+
         private void InitializeWorkers()
         {
             var availableNeeds = new Dictionary<string, NeedType>(StringComparer.Ordinal);

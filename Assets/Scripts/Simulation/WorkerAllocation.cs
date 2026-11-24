@@ -59,6 +59,26 @@ namespace ResortEmpire
         public bool HasWorker(string buildingId) =>
             buildingId != null && assignments.TryGetValue(buildingId, out var workerId) && workerId != null;
 
+        internal bool TryAddStaffedBuilding(string buildingId, BuildingService service)
+        {
+            if (string.IsNullOrWhiteSpace(buildingId) || service == null ||
+                services.ContainsKey(buildingId) || services.ContainsValue(service))
+                return false;
+
+            // Jedna budova je prazdna, takze pri troch budovach pribudne Worker3.
+            int number = assignments.Count;
+            string workerId;
+            do
+            {
+                workerId = $"Worker{number++}";
+            } while (assignments.ContainsValue(workerId));
+
+            service.SetPerformanceMultiplier(1f);
+            services.Add(buildingId, service);
+            assignments.Add(buildingId, workerId);
+            return true;
+        }
+
         public string GetWorkerId(string buildingId)
         {
             if (buildingId == null || !assignments.TryGetValue(buildingId, out var workerId))
