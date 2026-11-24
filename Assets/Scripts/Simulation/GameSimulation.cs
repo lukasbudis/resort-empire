@@ -95,6 +95,16 @@ namespace ResortEmpire
             return null;
         }
 
+        internal bool TryAddPurchasedBuilding(string buildingId, NeedType need)
+        {
+            if (workers == null || !buildingServices.TryGetValue(need, out var service) ||
+                !workers.TryAddStaffedBuilding(buildingId, service))
+                return false;
+
+            workerBuildingNeeds.Add(buildingId, need);
+            return true;
+        }
+
         private WorkerAllocation RequireWorkers() =>
             workers ?? throw new InvalidOperationException("Workeri nie su inicializovani.");
         public void RegisterBuildingService(NeedType need, BuildingService service)

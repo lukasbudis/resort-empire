@@ -111,6 +111,18 @@ namespace ResortEmpire
             GameStateChanged?.Invoke(newState);
         }
 
+        // Nakup uz overil podmienky oblasti a cenu. Tu sa meni len simulacia.
+        public bool TryAddPurchasedBuilding(string buildingId)
+        {
+            if (CurrentState != GameState.AwaitingWave || string.IsNullOrWhiteSpace(buildingId) ||
+                availableBuildingIds.Contains(buildingId) || !buildingNeeds.TryGetValue(buildingId, out var need) ||
+                !simulation.TryAddPurchasedBuilding(buildingId, need))
+                return false;
+
+            availableBuildingIds.Add(buildingId);
+            return true;
+        }
+
         private static int GetDemand(global::NeedsConfig needs, NeedType need)
         {
             switch (need)
